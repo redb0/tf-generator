@@ -40,7 +40,7 @@ class Method:
     def write_in_file(self, file_name: str):
         """
         Метод для записи сгенерированного кода в файл.
-        :param file_name: имя файла, строка. Пример "test.py"
+        :param file_name: имя файла, строка. Пример "testq.py"
         :return: -
         """
         script_dir = os.path.dirname(__file__)  # <-- абсолютный путь до места с программой

@@ -36,8 +36,10 @@ class MethodMinPython(methods.PythonMethod.Method):
                               Второй элемент - список, содержащий вспомогательные функции.
         """
         for i in range(p.number_extrema):
-            a_i = p.coefficients_abruptness[i * len(p.coordinates[i]): len(p.coordinates[i]) * (i + 1)]
-            p_i = p.degree_smoothness[i * len(p.coordinates[i]): len(p.coordinates[i]) * (i + 1)]
+            # a_i = p.coefficients_abruptness[i * len(p.coordinates[i]): len(p.coordinates[i]) * (i + 1)]
+            # p_i = p.degree_smoothness[i * len(p.coordinates[i]): len(p.coordinates[i]) * (i + 1)]
+            a_i = p.coefficients_abruptness[i]
+            p_i = p.degree_smoothness[i]
             expression = self.generate_expression(a_i, p.coordinates[i], p_i, p.function_values[i])
             name, func_str = self.subfunction_construction(idx_main_func, i, expression)
             self.subfunc_names_list.append(name)

@@ -9,6 +9,7 @@ class Parameters:
                                   Типы: "method_min" - функция, построенная по методу Фельдбаума
                                         "hyperbolic_potential" - гиперболическая потенциальная функция
                                         "exponential_potential" - экспоненциальная потенциальная функция
+                                        
         :param num_extrema      : количество экстремумов, целое число >= 1
         :param coord            : список координат экстремумов, длиной num_extrema
         :param func_values      : значения функции в соответствующих экстремумах, 

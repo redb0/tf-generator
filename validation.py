@@ -3,15 +3,12 @@ from parameters import Parameters
 
 def validation_parameters(p: Parameters, func_type):
     n = p.number_extrema
-    len_coord = len(p.coordinates)
-    func_val_len = len(p.function_values)
-    coef_len = len(p.coefficients_abruptness)
     if n < 1:
         return False
-    ok = (n == len_coord) and \
-         (n == func_val_len) and \
-         (2 * n == len(p.degree_smoothness)) and \
-         (2 * n == coef_len)
+    ok = (n == len(p.coordinates)) and \
+         (n == len(p.function_values)) and \
+         (n == len(p.degree_smoothness)) and \
+         (n == len(p.coefficients_abruptness))
     if not ok:
         return False
 
@@ -21,14 +18,27 @@ def validation_parameters(p: Parameters, func_type):
             return False
 
     if func_type == "method_min":
-        for i in range(len(p.degree_smoothness)):
-            if p.degree_smoothness[i] < 0:
+        if (type(p.degree_smoothness[0]) == int) or (type(p.degree_smoothness[0]) == float):
+            return False
+        len_p_i = len(p.degree_smoothness[0])
+        for p_i in p.degree_smoothness:
+            if (len_p_i != len(p_i)) or (len_p_i != len_c):
                 return False
+            for i in range(len(p_i)):
+                if p_i[i] < 0:
+                    return False
 
     if (func_type == "hyperbolic_potential") or (func_type == "exponential_potential"):
         for i in range(len(p.function_values)):
-            if p.function_values[i] < 0 or p.coefficients_abruptness < 0:
+            if p.function_values[i] < 0:
                 return False
+        len_a_i = len(p.coefficients_abruptness[0])
+        for a_i in p.coefficients_abruptness:
+            if len_a_i != len(a_i):
+                return False
+            for i in range(len(a_i)):
+                if a_i[i] < 0:
+                    return False
 
     return True
 

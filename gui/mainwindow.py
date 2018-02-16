@@ -1,11 +1,17 @@
 import json
 
-from PyQt5.QtWidgets import QMainWindow, QMessageBox, QCheckBox, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog
 
 from gui.mainwindow_ui import UiMainWindow
 import validation
 from methods.method_min_python import MethodMinPython
 from parameters import Parameters
+import parser_field
+from test_func import test_func
+
+from graph.graph_3d import Canvas3dGraph
+from graph.contour_graph import CanvasContourGraph
+from graph.slice_graph import CanvasSliceGraph
 
 
 class MainWindow(QMainWindow):
@@ -15,15 +21,23 @@ class MainWindow(QMainWindow):
         self.ui.setup_ui(self)
 
         # TODO: сделать на форме поле для ввода индекса функции, сделать автоматическую генерацию имени файла
-        self.file_name = "test.py"
+        self.file_name = "testq.py"
         self.idx_func = 10
         self.parameters = None
 
-        self.ui.construct_function.clicked.connect(self.construction_clicked)
-        self.ui.actionOpenJson.triggered.connect(self.import_json)
-        self.ui.clear.clicked.connect(self.clear_edits)
+        # кнопки
+        self.ui.generate_code_python_func.clicked.connect(self.generate_code)
+        self.ui.clear_btn.clicked.connect(self.clear_edits)
+        self.ui.draw_graph_btn.clicked.connect(self.draw_graph)
 
-    def construction_clicked(self):
+        # действия
+        self.ui.actionOpenJson.triggered.connect(self.import_json)
+        self.ui.actionSave.triggered.connect(self.save_parameters_in_json)
+        self.ui.actionQuit.triggered.connect(self.close)
+
+        # TODO: сделать нормальное удаление графиков
+
+    def generate_code(self):
         if self.parameters is None:
             self.parameters = self.read_parameters_function()
         func_type = self.read_type()
@@ -35,84 +49,39 @@ class MainWindow(QMainWindow):
                 pass
             elif func_type == "exponential_potential":
                 pass
-            self.parameters = None
-            method = None
+            self.ui.statusBar.showMessage("Генерация кода успешно завершена", 5000)
+            # self.parameters = None
+            # method = None
 
     def read_parameters_function(self):
-        number_extrema = self.parse_number_extrema()
-        coordinates = self.parse_coordinates()
-        function_values = self.parse_function_values()
-        degree_smoothness = self.parse_degree_smoothness()
-        coefficients = self.parse_coefficients_abruptness()
+        number_extrema = parser_field.parse_number_extrema(self.ui.number_extrema, self.display_error_message)
+        coordinates = parser_field.parse_coordinates(self.ui.coordinates.text(), self.display_error_message)
+        function_values = parser_field.parse_field(
+            self.ui.function_values.text(),
+            self.ui.function_values_label.text(),
+            self.display_error_message)
+        degree_smoothness = parser_field.parse_field(
+            self.ui.degree_smoothness.text(),
+            self.ui.degree_smoothness_label.text(),
+            self.display_error_message)
+        coefficients = parser_field.parse_field(
+            self.ui.coefficients_abruptness_function.text(),
+            self.ui.coefficients_abruptness_function_label.text(),
+            self.display_error_message)
         func_type = self.read_type()
-        p = Parameters(number_extrema,
-                       coordinates,
-                       function_values,
-                       degree_smoothness,
-                       coefficients)
-        ok = validation.validation_parameters(p, func_type)
-        if not ok:
-            error = "Одно или несколько полей заполнены некорректно!"
-            self.display_error_message(error)
-            return None
-        else:
-            return p
-
-    # TODO: вынести все методы parse в отдельный файл
-    def parse_number_extrema(self):
-        number = self.ui.number_extrema.value()
-        ok = validation.validation_num_extrema(number)
-        if ok:
-            return number
-        else:
-            error = "Поле \"Количество экстремумов\" заполнено некорректно"
-            self.display_error_message(error)
-            return 0
-
-    def parse_coordinates(self, separator=';'):
-        """
-        Функция разбора строки, содержащей координаты экстремумов
-        :param separator: 
-        :return: список с координатами, если преобразование успешно,
-                 сообщение об ошибке и пустой список в противном случае
-        """
-        text = self.ui.coordinates.text()
-        text = text.replace(' ', '')
-        if len(text) == 0:
-            error = "Поле \"Координаты экстремумов\" не заполнено"
-            self.display_error_message(error)
-            return []
-        text = '[' + text + ']'
-        # coordinates = text.split(separator)
-        try:
-            coordinates_array = json.loads(text)
-            return coordinates_array
-        except ValueError:
-            error = "Поле \"Координаты экстремумов\" заполнено некорректно"
-            self.display_error_message(error)
-        # except:
-        #     error = "Exterminate all the bugs!"
-        #     self.display_error_message(error)
-
-        return []
-
-    def parse_function_values(self, separator=';'):
-        text = self.ui.function_values.text()
-        field_name = self.ui.function_values_label.text()
-        array = self.parse_number_list(text, field_name)
-        return array
-
-    def parse_degree_smoothness(self, separator=';'):
-        text = self.ui.degree_smoothness.text()
-        field_name = self.ui.degree_smoothness_label.text()
-        array = self.parse_number_list(text, field_name)
-        return array
-
-    def parse_coefficients_abruptness(self, separator=';'):
-        text = self.ui.coefficients_abruptness_function.text()
-        field_name = self.ui.coefficients_abruptness_function_label.text()
-        array = self.parse_number_list(text, field_name)
-        return array
+        if func_type != "":
+            p = Parameters(number_extrema,
+                           coordinates,
+                           function_values,
+                           degree_smoothness,
+                           coefficients)
+            ok = validation.validation_parameters(p, func_type)
+            if not ok:
+                error = "Одно или несколько полей заполнены некорректно!"
+                self.display_error_message(error)
+                return None
+            else:
+                return p
 
     def read_type(self):
         """
@@ -133,29 +102,6 @@ class MainWindow(QMainWindow):
             error = "Выберите метод конструирования тестовой функции!"
             self.display_error_message(error)
         return func_type
-
-    def parse_number_list(self, s: str, field_name: str):
-        """
-        Метод разбора строки.
-        Преобразует строку состоящую из чисел разделенных запятой в одномерный список.
-        :param s         : строка, содержащая числа
-        :param field_name: имя поля из которого считывалась строка
-        :return          : возвращает одномерный список, если введена корректная строка, 
-                           иначе возвращает пустой список
-        """
-        s = s.replace(' ', '')
-        if len(s) == 0:
-            error = "Поле \"" + field_name + "\" не заполнено"
-            self.display_error_message(error)
-            return []
-        s = '[' + s + ']'
-        try:
-            values = json.loads(s)
-            return values
-        except ValueError:
-            error = "Поле \"" + field_name + "\" заполнено некорректно"
-            self.display_error_message(error)
-        return []
 
     def display_error_message(self, error: str):
         info = QMessageBox.information(
@@ -194,12 +140,139 @@ class MainWindow(QMainWindow):
         self.ui.degree_smoothness.setText(str(self.parameters.degree_smoothness)[1:-1])
         self.ui.coordinates.setText(str(self.parameters.coordinates)[1:-1])
 
+    def delete_widget(self, layout):
+        # print(layout.count())
+        # import matplotlib
+        # matplotlib.pyplot.close('all')
+        for i in range(layout.count()):
+            item = layout.itemAt(i).widget()
+            if item is not None:
+                item.close()
+                item.deleteLater()
+            else:
+                layout.takeAt(i)
+
+    # def delete_widget(self, widget):
+    #     for i in range(widget.count()):
+    #         item = widget.itemAt(0)
+    #         widget.removeItem(item)
+
     def clear_edits(self):
         self.ui.coefficients_abruptness_function.setText("")
         self.ui.number_extrema.setValue(1)
         self.ui.function_values.setText("")
         self.ui.degree_smoothness.setText("")
         self.ui.coordinates.setText("")
+        self.ui.constraints_x1.setText("")
+        self.ui.constraints_x2.setText("")
+        self.ui.slice_expr_x1.setText("")
+        self.ui.slice_expr_x2.setText("")
 
-    # def equality_check(self):
-    #     pass
+        self.delete_widget(self.ui.v_box_3d_graph)
+        self.delete_widget(self.ui.v_box_contour_graph)
+        self.delete_widget(self.ui.v_box_slice_graph1)
+        self.delete_widget(self.ui.v_box_slice_graph2)
+
+    def save_parameters_in_json(self):
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, "Открыть json-файл ...", "/home", "Json-Files (*.json);;All Files (*)"
+        )
+
+        if file_name:
+            data = json.dumps(self.parameters.__dict__, indent=4)
+            with open(file_name, 'w') as f:
+                f.write(data)
+
+        self.ui.statusBar.showMessage("Сохранение параметров успешно завершено", 2000)
+
+    def draw_graph(self):
+        constraints_x = parser_field.parse_number_list(self.display_error_message,
+                                                       self.ui.constraints_x1.text(),
+                                                       self.ui.constraints_x1_label.text())
+        constraints_y = parser_field.parse_number_list(self.display_error_message,
+                                                       self.ui.constraints_x2.text(),
+                                                       self.ui.constraints_x2_label.text())
+
+        expr_x1 = self.ui.slice_expr_x1.text()
+        expr_x2 = self.ui.slice_expr_x2.text()
+
+        if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)):
+            self.delete_widget(self.ui.v_box_3d_graph)
+            self.delete_widget(self.ui.v_box_contour_graph)
+            self.delete_widget(self.ui.v_box_slice_graph1)
+            self.delete_widget(self.ui.v_box_slice_graph2)
+
+            h = 0.2
+            delta = 0.3
+            method_type = self.read_type()
+            if method_type != "":
+                if method_type == "method_min":
+                    f = test_func.get_test_function_method_min(
+                        self.parameters.get_number_extrema(),
+                        self.parameters.get_coefficients_abruptness(),
+                        self.parameters.get_coordinates(),
+                        self.parameters.get_degree_smoothness(),
+                        self.parameters.get_function_values()
+                    )
+                elif method_type == "hyperbolic_potential":
+                    f = test_func.get_tf_hyperbolic_potential_abs(
+                        self.parameters.get_number_extrema(),
+                        self.parameters.get_coefficients_abruptness(),
+                        self.parameters.get_coordinates(),
+                        self.parameters.get_degree_smoothness(),
+                        self.parameters.get_function_values()
+                    )
+                    h = 0.05
+                    delta = 0.05
+                elif method_type == "exponential_potential":
+                    f = test_func.get_tf_exponential_potential(
+                        self.parameters.get_number_extrema(),
+                        self.parameters.get_coefficients_abruptness(),
+                        self.parameters.get_coordinates(),
+                        self.parameters.get_degree_smoothness(),
+                        self.parameters.get_function_values()
+                    )
+                    h = 0.1
+                    delta = 0.1
+
+                graph_3d = Canvas3dGraph()
+                graph_3d_toolbar = graph_3d.get_toolbar()
+                self.ui.v_box_3d_graph.addWidget(graph_3d_toolbar)
+                self.ui.v_box_3d_graph.addWidget(graph_3d)
+                graph_3d.graph_3d(constraints_x, constraints_y, f, h=h)
+                graph_3d.set_labels(xlabel="x1",
+                                    ylabel="x2",
+                                    title="F" + str(self.idx_func),
+                                    legend_title="F" + str(self.idx_func))
+
+                contour_graph = CanvasContourGraph()
+                contour_graph_toolbar = contour_graph.get_toolbar()
+                self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
+                self.ui.v_box_contour_graph.addWidget(contour_graph)
+                contour_graph.contour_graph(constraints_x, constraints_y, f, h=h, delta=delta)
+                contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
+
+                if (expr_x1 != "") and (expr_x2 != ""):
+                    slice_graph_1 = CanvasSliceGraph()  # self.ui.v_box_slice_graph1
+                    slice_graph_1_toolbar = slice_graph_1.get_toolbar()
+                    self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
+                    self.ui.v_box_slice_graph1.addWidget(slice_graph_1)
+                    slice_graph_1.graph_slice(constraints_x, constraints_y, f, expr_x=expr_x1)
+                    slice_graph_1.set_labels(xlabel="x2",
+                                             ylabel="F" + str(self.idx_func),
+                                             title="x1=" + expr_x1,
+                                             legend_title="F" + str(self.idx_func))
+
+                    slice_graph_2 = CanvasSliceGraph()  # self.ui.v_box_slice_graph2
+                    slice_graph_2_toolbar = slice_graph_2.get_toolbar()
+                    self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
+                    self.ui.v_box_slice_graph2.addWidget(slice_graph_2)
+                    slice_graph_2.graph_slice(constraints_x, constraints_y, f, expr_y=expr_x2)
+                    slice_graph_2.set_labels(xlabel="x1",
+                                             ylabel="F" + str(self.idx_func),
+                                             title="x2=" + expr_x2,
+                                             legend_title="F" + str(self.idx_func))
+            else:
+                self.display_error_message("Выберите метод конструирования тестовой функции")
+        else:
+            self.display_error_message("Что-то пошло не так")
