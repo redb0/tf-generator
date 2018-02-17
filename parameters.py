@@ -4,11 +4,6 @@ class Parameters:
     def __init__(self, num_extrema, coord, func_values, degree_smoothness, c_abruptness):
         """
         Класс хранит данные описывающие функцию
-        
-        :param func_type        : тип функции, текстовое поле
-                                  Типы: "method_min" - функция, построенная по методу Фельдбаума
-                                        "hyperbolic_potential" - гиперболическая потенциальная функция
-                                        "exponential_potential" - экспоненциальная потенциальная функция
                                         
         :param num_extrema      : количество экстремумов, целое число >= 1
         :param coord            : список координат экстремумов, длиной num_extrema

@@ -8,7 +8,7 @@ from graph.mpl_canvas import MlpCanvas
 class Canvas3dGraph(MlpCanvas):
     def graph_3d(self, constraints_x, constraints_y, func, h=0.2, subplot_n=2, subplot_m=2):
         x, y, z = self.make_data(constraints_x, constraints_y, func, h=0.2)
-
+        # TODO: добавить подпись для легенды
         self.axes = Axes3D(self.fig)
         # ax = fig.add_subplot(111, projection='3d')
         self.axes.plot_surface(x, y, z,

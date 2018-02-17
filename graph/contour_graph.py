@@ -8,9 +8,8 @@ from graph.mpl_canvas import MlpCanvas
 class CanvasContourGraph(MlpCanvas):
     def contour_graph(self, constraints_x, constraints_y, func, h=0.1, delta=0.2):
         x, y, z, levels = self.make_data(constraints_x, constraints_y, func, h=h, delta=delta)
-        # fig, self.axes = plt.subplot()
-
-        plt.contour(x, y, z, levels=levels)  # , levels=levels
+        # TODO: добавить подпись для легенды
+        plt.contour(x, y, z, levels=levels)
         self.axes.grid()
 
     def make_data(self, constraints_x, constraints_y, func, h=0.2, delta=0.3):

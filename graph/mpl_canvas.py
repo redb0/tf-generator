@@ -9,8 +9,6 @@ class MlpCanvas(FigureCanvas):
         self.fig = plt.figure(figsize=(width, height))
         self.axes = plt.subplot()
 
-        # self.compute_initial_figure()
-
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
 
@@ -19,15 +17,44 @@ class MlpCanvas(FigureCanvas):
         return toolbar
 
     def graph_3d(self, constraints_x, constraints_y, func):
+        """
+        Метод построения трехмерного графика тестовой функции
+        :param constraints_x: 
+        :param constraints_y: 
+        :param func: 
+        :return: 
+        """
         pass
 
     def contour_graph(self, constraints_x, constraints_y, func):
+        """
+        Метод построения графика изолиний тестовой функции
+        :param constraints_x: 
+        :param constraints_y: 
+        :param func: 
+        :return: 
+        """
         pass
 
     def graph_slice(self, constraints_x, constraints_y, func):
+        """
+        Метод построения графика срезов тестовой функции
+        :param constraints_x: 
+        :param constraints_y: 
+        :param func: 
+        :return: 
+        """
         pass
 
     def make_data(self, constraints_x, constraints_y, func, h):
+        """
+        Метод генерациии данных для построения графиков
+        :param constraints_x: 
+        :param constraints_y: 
+        :param func: 
+        :param h: 
+        :return: 
+        """
         pass
 
     def set_labels(self, xlabel="", ylabel="", title="", legend_title=""):
@@ -45,4 +72,5 @@ class MlpCanvas(FigureCanvas):
         plt.rcParams.update(params)
 
     def close(self):
+        """Метод закрытия графиков библиотеки mathplotlib"""
         plt.close()

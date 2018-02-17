@@ -8,6 +8,7 @@ from graph.mpl_canvas import MlpCanvas
 
 class CanvasSliceGraph(MlpCanvas):
     def graph_slice(self, constraints_x, constraints_y, func, expr_x="", expr_y="", h=0.2):
+        # TODO: добавить подпись для легенды
         if expr_x != "":
             y, z = self.make_data(constraints_x,
                                   constraints_y,

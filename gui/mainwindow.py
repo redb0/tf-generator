@@ -35,9 +35,8 @@ class MainWindow(QMainWindow):
         self.ui.actionSave.triggered.connect(self.save_parameters_in_json)
         self.ui.actionQuit.triggered.connect(self.close)
 
-        # TODO: сделать нормальное удаление графиков
-
     def generate_code(self):
+        # TODO: добавить комментарии
         if self.parameters is None:
             self.parameters = self.read_parameters_function()
         func_type = self.read_type()
@@ -54,6 +53,7 @@ class MainWindow(QMainWindow):
             # method = None
 
     def read_parameters_function(self):
+        # TODO: добавить комментарии
         number_extrema = parser_field.parse_number_extrema(self.ui.number_extrema, self.display_error_message)
         coordinates = parser_field.parse_coordinates(self.ui.coordinates.text(), self.display_error_message)
         function_values = parser_field.parse_field(
@@ -104,12 +104,19 @@ class MainWindow(QMainWindow):
         return func_type
 
     def display_error_message(self, error: str):
+        """
+        Метод вывода сообщение об ошибке на экран
+        :param error: текст ошибки
+        :return: -
+        """
         info = QMessageBox.information(
             self, 'Внимание!', error,
             QMessageBox.Cancel, QMessageBox.Cancel
         )
 
     def import_json(self):
+        """Метод импорта параметров тестовой функции из json-файла посредством вызова диалогового окна,
+        если считывание прошло неудачно, то выводится сообщение об ошибке"""
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Открыть json-файл ...", "/home", "Json-Files (*.json);;All Files (*)"
         )
@@ -124,8 +131,10 @@ class MainWindow(QMainWindow):
             except ValueError:
                 error = "Файл заполнен некорректно"
                 self.display_error_message(error)
+            self.ui.statusBar.showMessage("Данные импортированы", 5000)
 
     def dict_in_obj(self, d):
+        # TODO: добавить комментарии
         p = Parameters(d["num_extrema"],
                        d["coordinates"],
                        d["function_values"],
@@ -134,6 +143,7 @@ class MainWindow(QMainWindow):
         return p
 
     def print_parameters_in_edit(self):
+        # TODO: добавить комментарии
         self.ui.coefficients_abruptness_function.setText(str(self.parameters.coefficients_abruptness)[1:-1])
         self.ui.number_extrema.setValue(self.parameters.number_extrema)
         self.ui.function_values.setText(str(self.parameters.function_values)[1:-1])
@@ -141,6 +151,11 @@ class MainWindow(QMainWindow):
         self.ui.coordinates.setText(str(self.parameters.coordinates)[1:-1])
 
     def delete_widget(self, layout):
+        """
+        Метод удаления виджетов из лайаута (в основном графиков)
+        :param layout: контейнер типя Layout
+        :return: -
+        """
         # print(layout.count())
         # import matplotlib
         # matplotlib.pyplot.close('all')
@@ -158,6 +173,7 @@ class MainWindow(QMainWindow):
     #         widget.removeItem(item)
 
     def clear_edits(self):
+        """Метод очистки текстовых полей и удаления открытых графиков"""
         self.ui.coefficients_abruptness_function.setText("")
         self.ui.number_extrema.setValue(1)
         self.ui.function_values.setText("")
@@ -173,7 +189,10 @@ class MainWindow(QMainWindow):
         self.delete_widget(self.ui.v_box_slice_graph1)
         self.delete_widget(self.ui.v_box_slice_graph2)
 
+        self.ui.statusBar.showMessage("Зло не дремлет. И мы не должны.", 5000)
+
     def save_parameters_in_json(self):
+        """Метод сохранения параметров тестовой функции в json-файл посредством вызова диалогового окна"""
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Открыть json-файл ...", "/home", "Json-Files (*.json);;All Files (*)"
         )
@@ -186,6 +205,7 @@ class MainWindow(QMainWindow):
         self.ui.statusBar.showMessage("Сохранение параметров успешно завершено", 2000)
 
     def draw_graph(self):
+        # TODO: добавить комментарии
         constraints_x = parser_field.parse_number_list(self.display_error_message,
                                                        self.ui.constraints_x1.text(),
                                                        self.ui.constraints_x1_label.text())

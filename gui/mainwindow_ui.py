@@ -5,8 +5,6 @@ from PyQt5.QtWidgets import QApplication, QAction
 
 class UiMainWindow:
     def __init__(self):
-        self.central_wdg = None
-
         self.menuBar = None
         self.menuFile = None
         self.menuSettings = None
@@ -50,8 +48,8 @@ class UiMainWindow:
         main_window.resize(900, 548)
         main_window.setWindowTitle("TF_generator v0.1")
 
-        self.central_wdg = QtWidgets.QWidget()
-        main_window.setCentralWidget(self.central_wdg)
+        central_wdg = QtWidgets.QWidget()
+        main_window.setCentralWidget(central_wdg)
 
         self.menuBar = QtWidgets.QMenuBar(main_window)
         self.menuBar.setObjectName("menuBar")
@@ -83,8 +81,6 @@ class UiMainWindow:
 
         self.actionSettings = QAction(main_window)
         self.actionSettings.setObjectName("actionSettings")
-        # self.actionOpenDocker = QAction(main_window)
-        # self.actionOpenDocker.setObjectName("actionOpenDocker")
 
         self.actionAbout = QAction(main_window)
         self.actionAbout.setObjectName("actionAbout")
@@ -102,7 +98,6 @@ class UiMainWindow:
         self.menuBar.addAction(self.menuHelp.menuAction())
 
         self.menuSettings.addAction(self.actionSettings)
-        # self.menuSettings.addAction(self.actionOpenDocker)
         self.menuBar.addAction(self.menuSettings.menuAction())
 
         self.methods_title = QtWidgets.QLabel()
@@ -209,51 +204,28 @@ class UiMainWindow:
         main_window.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.docker)
         self.docker.setAllowedAreas(QtCore.Qt.RightDockWidgetArea | QtCore.Qt.LeftDockWidgetArea)
 
-        self.central_widget_docker = QtWidgets.QWidget()
-        self.docker.setWidget(self.central_widget_docker)
+        central_widget_docker = QtWidgets.QWidget()
+        self.docker.setWidget(central_widget_docker)
 
         l = QtWidgets.QVBoxLayout()
-        self.h1 = QtWidgets.QHBoxLayout()
-        self.h2 = QtWidgets.QHBoxLayout()
+        h1 = QtWidgets.QHBoxLayout()
+        h2 = QtWidgets.QHBoxLayout()
 
-        l.addLayout(self.h1)
-        l.addLayout(self.h2)
-        self.central_widget_docker.setLayout(l)
+        l.addLayout(h1)
+        l.addLayout(h2)
+        central_widget_docker.setLayout(l)
 
         self.v_box_3d_graph = QtWidgets.QVBoxLayout()
         self.v_box_contour_graph = QtWidgets.QVBoxLayout()
-        self.h1.addLayout(self.v_box_3d_graph)
-        self.h1.addLayout(self.v_box_contour_graph)
-
-        # self.graph_3d_tb = QtWidgets.QWidget()
-        # self.graph_3d_m = QtWidgets.QWidget()
-        # self.v_box_3d_graph.addWidget(self.graph_3d_tb)
-        # self.v_box_3d_graph.addWidget(self.graph_3d_m)
-
-        # self.contour_tb = QtWidgets.QWidget()
-        # self.contour_m = QtWidgets.QWidget()
-        # self.v_box_contour_graph.addWidget(self.contour_tb)
-        # self.v_box_contour_graph.addWidget(self.contour_m)
+        h1.addLayout(self.v_box_3d_graph)
+        h1.addLayout(self.v_box_contour_graph)
 
         self.v_box_slice_graph1 = QtWidgets.QVBoxLayout()
         self.v_box_slice_graph2 = QtWidgets.QVBoxLayout()
-        self.h2.addLayout(self.v_box_slice_graph1)
-        self.h2.addLayout(self.v_box_slice_graph2)
+        h2.addLayout(self.v_box_slice_graph1)
+        h2.addLayout(self.v_box_slice_graph2)
 
-        # self.slice_graph1_tb = QtWidgets.QWidget()
-        # self.slice_graph1_m = QtWidgets.QWidget()
-        # self.v_box_slice_graph1.addWidget()
-        # self.v_box_slice_graph1.addWidget()
-
-        # self.slice_graph2_tb = QtWidgets.QWidget()
-        # self.slice_graph2_m = QtWidgets.QWidget()
-        # self.v_box_slice_graph2.addWidget(self.slice_graph2_tb)
-        # self.v_box_slice_graph2.addWidget(self.slice_graph2_m)
-
-        # self.l1 = QtWidgets.QLabel()
-        # self.v_box_3d_graph.addWidget(self.l1)
-
-        self.central_wdg.setLayout(main_v_box)
+        central_wdg.setLayout(main_v_box)
 
         # self.actionQuit.triggered.connect(main_window.close)
         self.retranslate_ui(main_window)
@@ -304,8 +276,6 @@ class UiMainWindow:
         self.constraints_x2.setText("-6, 6")
         self.slice_expr_x1.setText("0")
         self.slice_expr_x2.setText("0")
-
-        # self.l1.setText(self.to_utf("Место для Вашей рекламы!"))
 
         self.generate_code_python_func.setText("Сгенерировать код функции (Python)")
         self.draw_graph_btn.setText("Построить график")
