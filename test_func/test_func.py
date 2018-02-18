@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 
 # def tryeval (f, *args, **kwargs):
@@ -5,7 +7,8 @@ import numpy as np
 #         f(*args, **kwargs)
 
 
-def get_test_function_method_min(n, a, c, p, b):
+def get_test_function_method_min(n: int, a: List[List[float]], c: List[List[float]],
+                                 p: List[List[float]], b: List[float]):
     """
     Функция-замыкание, генерирует и возвращает тестовую функцию, применяя метод Фельдбаума, 
     т. е. применяя оператор минимума к одноэкстремальным степенным функциям.
@@ -32,14 +35,16 @@ def get_test_function_method_min(n, a, c, p, b):
     return func
 
 
-def get_tf_hyperbolic_potential_abs(n, a, c, p, b):
+def get_tf_hyperbolic_potential_abs(n: int, a: List[float], c: List[List[float]],
+                                    p: List[List[float]], b: List[float]):
     """
-    
+    Функция-замыкание. Генерирует и возвращает тестовую функцию, 
+    основанную на гиперболических потенциалах с аддитивными модульными функциями в знаменателе.
     :param n: количество экстремумов, целое число >= 1
-    :param a: 
-    :param c: 
+    :param a: одномерный список коэффициентов (длиной n), определяющих крутость функции в районе экстремума
+    :param c: двумерный список координат экстремумов длиной n, List[List[float]]
     :param p: 
-    :param b: 
+    :param b: одномерный список коэффициентов (длиной n), определяющих значения функции в точках экстремумов
     :return: возвращает функцию, которой необходимо передавать одномерный список координат точки, 
              возвращаемая функция вернет значение тестовой функции в данной точке
     """
@@ -56,13 +61,15 @@ def get_tf_hyperbolic_potential_abs(n, a, c, p, b):
     return func
 
 
-def get_tf_hyperbolic_potential_sqr(n, a, c, b):
+def get_tf_hyperbolic_potential_sqr(n: int, a: List[List[float]], c: List[List[float]], b):
     """
-    
+    Функция-замыкание. Генерирует и возвращает тестовую функцию, 
+    основанную на гиперболических потенциалах с иддитивными квадратичными функциями в знаменателе.
     :param n: количество экстремумов, целое число >= 1
     :param a: 
-    :param c: 
-    :param b: 
+    :param c: двумерный список координат экстремумов длиной n, 
+              List[List[float]], размерность n * m, m - размерность задачи
+    :param b: одномерный список коэффициентов (длиной n), определяющих значения функции в точках экстремумов
     :return: возвращает функцию, которой необходимо передавать одномерный список координат точки, 
              возвращаемая функция вернет значение тестовой функции в данной точке
     """
@@ -71,7 +78,7 @@ def get_tf_hyperbolic_potential_sqr(n, a, c, b):
         for i in range(n):
             res = 0
             for j in range(len(x)):
-                res = res + a[i][j] * (x[j] - c[i][j]) ** 2
+                res = res + a[i][j] * (x[j] - c[i][j]) ** 2  # правильно ли стоит a???????
             res = res + b[i]
             res = -(1 / res)
             value = value + res
@@ -79,14 +86,16 @@ def get_tf_hyperbolic_potential_sqr(n, a, c, b):
     return func
 
 
-def get_tf_exponential_potential(n, a, c, p, b):
+def get_tf_exponential_potential(n: int, a: List[float], c: List[List[float]],
+                                 p: List[List[float]], b: List[float]):
     """
-    
+    Функция-замыкание. Генерирует и возвращает тестовую функцию, 
+    основанную на экспоненциальных потенциалах с аддитивными модульными функциями в знаменателе.
     :param n: количество экстремумов, целое число >= 1
-    :param a: 
-    :param c: 
-    :param p: 
-    :param b: 
+    :param a: одномерный список коэффициентов (длиной n), определяющих крутость функции в районе экстремума
+    :param c: двумерный список координат экстремумов, List[List[float]], размерность n * m, m - размерность задачи
+    :param p: двумерный список степеней гладкости функции в районе экстремума, List[List[float]], размерность n * m
+    :param b: одномерный список коэффициентов (длиной n), определяющих значения функции в точках экстремумов
     :return: возвращает функцию, которой необходимо передавать одномерный список координат точки, 
              возвращаемая функция вернет значение тестовой функции в данной точке
     """

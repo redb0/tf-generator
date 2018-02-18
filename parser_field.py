@@ -4,6 +4,7 @@ import validation
 
 
 def parse_field(field: str, label: str, print_error):
+    # TODO: добавить комментарии
     array = parse_number_list(print_error, field, label)
     return array
 
@@ -58,13 +59,14 @@ def parse_coordinates(s: str, print_error, separator=';'):
     return []
 
 
-def parse_number_extrema(field, print_error) -> int:
-    number = field.value()
-    ok = validation.validation_num_extrema(number)
+def parse_number(number, field_name: str, print_error) -> int:
+    # TODO: добавить комментарии
+    # number = field.value()
+    ok = validation.validation_num(number)
     if ok:
         return number
     else:
-        error = "Поле \"Количество экстремумов\" заполнено некорректно"
+        error = "Поле \"" + field_name + "\" заполнено некорректно"
         print_error(error)
         return 0
 

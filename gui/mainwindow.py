@@ -8,6 +8,7 @@ from methods.method_min_python import MethodMinPython
 from parameters import Parameters
 import parser_field
 from test_func import test_func
+import service
 
 from graph.graph_3d import Canvas3dGraph
 from graph.contour_graph import CanvasContourGraph
@@ -21,8 +22,8 @@ class MainWindow(QMainWindow):
         self.ui.setup_ui(self)
 
         # TODO: сделать на форме поле для ввода индекса функции, сделать автоматическую генерацию имени файла
-        self.file_name = "testq.py"
-        self.idx_func = 10
+        # self.file_name = "testq.py"
+        self.idx_func = 1
         self.parameters = None
 
         # кнопки
@@ -43,7 +44,8 @@ class MainWindow(QMainWindow):
         if not (self.parameters is None):
             if func_type == "method_min":
                 method = MethodMinPython()
-                method.generate_function(self.idx_func, self.file_name, self.parameters)
+                file_name = service.get_file_name(self.parameters.idx, pattern="test_func", expansion=".py")
+                method.generate_function(self.idx_func, file_name, self.parameters)
             elif func_type == "hyperbolic_potential":
                 pass
             elif func_type == "exponential_potential":
@@ -54,7 +56,12 @@ class MainWindow(QMainWindow):
 
     def read_parameters_function(self):
         # TODO: добавить комментарии
-        number_extrema = parser_field.parse_number_extrema(self.ui.number_extrema, self.display_error_message)
+        self.idx_func = parser_field.parse_number(self.ui.idx_func.value(),
+                                                  self.ui.idx_func_label,
+                                                  self.display_error_message)
+        number_extrema = parser_field.parse_number(self.ui.number_extrema.value(),
+                                                   self.ui.number_extrema_label,
+                                                   self.display_error_message)
         coordinates = parser_field.parse_coordinates(self.ui.coordinates.text(), self.display_error_message)
         function_values = parser_field.parse_field(
             self.ui.function_values.text(),
@@ -70,7 +77,8 @@ class MainWindow(QMainWindow):
             self.display_error_message)
         func_type = self.read_type()
         if func_type != "":
-            p = Parameters(number_extrema,
+            p = Parameters(self.idx_func,
+                           number_extrema,
                            coordinates,
                            function_values,
                            degree_smoothness,
@@ -92,11 +100,11 @@ class MainWindow(QMainWindow):
                  Если не выбран ни один чекбокс выведется сообщение об ошибке
         """
         func_type = ""
-        if self.ui.method_min.checkState():
+        if self.ui.method_min.isChecked():
             func_type = "method_min"
-        elif self.ui.hyperbolic_potential.checkState():
+        elif self.ui.hyperbolic_potential.isChecked():
             func_type = "hyperbolic_potential"
-        elif self.ui.exponential_potential.checkState():
+        elif self.ui.exponential_potential.isChecked():
             func_type = "exponential_potential"
         else:
             error = "Выберите метод конструирования тестовой функции!"
@@ -126,21 +134,12 @@ class MainWindow(QMainWindow):
                 data = f.read()
             try:
                 p = json.loads(data)
-                self.parameters = self.dict_in_obj(p)
+                self.parameters = service.dict_in_obj(p)
                 self.print_parameters_in_edit()
             except ValueError:
                 error = "Файл заполнен некорректно"
                 self.display_error_message(error)
             self.ui.statusBar.showMessage("Данные импортированы", 5000)
-
-    def dict_in_obj(self, d):
-        # TODO: добавить комментарии
-        p = Parameters(d["num_extrema"],
-                       d["coordinates"],
-                       d["function_values"],
-                       d["degree_smoothness"],
-                       d["coefficients_abruptness"])
-        return p
 
     def print_parameters_in_edit(self):
         # TODO: добавить комментарии
@@ -205,6 +204,7 @@ class MainWindow(QMainWindow):
         self.ui.statusBar.showMessage("Сохранение параметров успешно завершено", 2000)
 
     def draw_graph(self):
+        self.read_parameters_function()
         # TODO: добавить комментарии
         constraints_x = parser_field.parse_number_list(self.display_error_message,
                                                        self.ui.constraints_x1.text(),
@@ -296,3 +296,8 @@ class MainWindow(QMainWindow):
                 self.display_error_message("Выберите метод конструирования тестовой функции")
         else:
             self.display_error_message("Что-то пошло не так")
+
+    def open_about_dialog(self):
+        # TODO: добавить комментарии
+        pass
+

@@ -1,7 +1,7 @@
 from parameters import Parameters
 
 
-def validation_parameters(p: Parameters, func_type):
+def validation_parameters(p: Parameters, func_type: str):
     n = p.number_extrema
     if n < 1:
         return False
@@ -43,7 +43,7 @@ def validation_parameters(p: Parameters, func_type):
     return True
 
 
-def validation_num_extrema(number: int):
+def validation_num(number: int):
     """
     Функция проверки корректности ввода количества экстремумов.
     :param number: количество экстремумов, целое число >= 1

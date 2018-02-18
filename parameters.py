@@ -1,7 +1,7 @@
 
 
 class Parameters:
-    def __init__(self, num_extrema, coord, func_values, degree_smoothness, c_abruptness):
+    def __init__(self, idx, num_extrema, coord, func_values, degree_smoothness, c_abruptness):
         """
         Класс хранит данные описывающие функцию
                                         
@@ -14,6 +14,7 @@ class Parameters:
         :param c_abruptness     : , список длиной num_extrema
         """
         # self.func_type = func_type
+        self.idx = idx
         self.number_extrema = num_extrema
         self.coordinates = coord
         self.function_values = func_values

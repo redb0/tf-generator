@@ -105,9 +105,9 @@ class UiMainWindow:
         self.parameters_title = QtWidgets.QLabel()
 
         # Методы построения функций
-        self.method_min = QtWidgets.QCheckBox()
-        self.hyperbolic_potential = QtWidgets.QCheckBox()
-        self.exponential_potential = QtWidgets.QCheckBox()
+        self.method_min = QtWidgets.QRadioButton()
+        self.hyperbolic_potential = QtWidgets.QRadioButton()
+        self.exponential_potential = QtWidgets.QRadioButton()
 
         self.layout_methods = QtWidgets.QVBoxLayout()
         self.layout_methods.addWidget(self.methods_title)
@@ -121,13 +121,18 @@ class UiMainWindow:
         self.scroll_methods.setWidgetResizable(True)
         self.scroll_methods.setMaximumWidth(275)
 
-        # Параметры функций
+        # Параметры функци
+        self.idx_func_label = QtWidgets.QLabel()
         self.number_extrema_label = QtWidgets.QLabel()
         self.coordinates_label = QtWidgets.QLabel()
         self.function_values_label = QtWidgets.QLabel()
         self.degree_smoothness_label = QtWidgets.QLabel()
         self.coefficients_abruptness_function_label = QtWidgets.QLabel()
 
+        self.idx_func = QtWidgets.QSpinBox()
+        self.idx_func.setMinimum(1)
+        self.idx_func.setMaximum(1000)
+        self.idx_func.setSingleStep(1)
         self.number_extrema = QtWidgets.QSpinBox()
         self.number_extrema.setMinimum(1)
         self.number_extrema.setMaximum(100)
@@ -138,6 +143,7 @@ class UiMainWindow:
         self.coefficients_abruptness_function = QtWidgets.QLineEdit()
 
         self.form = QtWidgets.QFormLayout()
+        self.form.addRow(self.idx_func_label, self.idx_func)
         self.form.addRow(self.number_extrema_label, self.number_extrema)
         self.form.addRow(self.coordinates_label, self.coordinates)
         self.form.addRow(self.function_values_label, self.function_values)
@@ -172,9 +178,9 @@ class UiMainWindow:
         self.layout_parameters.addLayout(self.form_graph)
 
 
-        self.scroll_parameters = QtWidgets.QScrollArea()
-        self.scroll_parameters.setLayout(self.layout_parameters)
-        self.scroll_parameters.setWidgetResizable(True)
+        scroll_parameters = QtWidgets.QScrollArea()
+        scroll_parameters.setLayout(self.layout_parameters)
+        scroll_parameters.setWidgetResizable(True)
 
         # кнопки
         self.generate_code_python_func = QtWidgets.QPushButton()
@@ -184,7 +190,7 @@ class UiMainWindow:
         # расположение кнопок и всех остальных виджетов (сетка)
         h_box = QtWidgets.QHBoxLayout()
         h_box.addWidget(self.scroll_methods)
-        h_box.addWidget(self.scroll_parameters)
+        h_box.addWidget(scroll_parameters)
 
         h_box_button = QtWidgets.QHBoxLayout()
         h_box_button.addStretch(1)
@@ -260,6 +266,7 @@ class UiMainWindow:
         self.methods_title.setText("Методы построения функций")
         self.parameters_title.setText("Параметры функции")
 
+        self.idx_func_label.setText(self.to_utf("Индекс тестовой функции"))
         self.number_extrema_label.setText("Количество экстремумов")
         self.coordinates_label.setText("Координаты экстремумов")
         self.function_values_label.setText("Значения функции")
