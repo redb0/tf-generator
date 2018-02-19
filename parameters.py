@@ -38,3 +38,6 @@ class Parameters:
 
     def set_number_extrema(self, value: int):
         self.number_extrema = value
+
+    def get_dimension(self):
+        return len(self.coordinates[0])
