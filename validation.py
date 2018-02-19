@@ -1,7 +1,19 @@
+from typing import TypeVar, List
+
 from parameters import Parameters
 
 
-def validation_parameters(p: Parameters, func_type: str):
+# параметризация дженериков
+T = TypeVar('T')
+
+
+def validation_parameters(p: Parameters, func_type: str) -> bool:
+    """
+    
+    :param p: 
+    :param func_type: 
+    :return: возвращает True. если проверка пройдена, иначе False
+    """
     n = p.number_extrema
     if n < 1:
         return False
@@ -12,34 +24,73 @@ def validation_parameters(p: Parameters, func_type: str):
     if not ok:
         return False
 
-    len_c = len(p.coordinates[0])
-    for c in p.coordinates:
-        if len_c != len(c):
+    if not type_valid(p.function_values, [int, float]):
+        return False
+    for i in range(n):
+        if not type_valid(p.coordinates[i], [int, float]):
             return False
+        if not type_valid(p.degree_smoothness[i], [int, float]):
+            return False
+
+    l = len(p.coordinates[0])
+    if not are_subarray_len_valid(p.coordinates, l):
+        return False
+    if not are_subarray_len_valid(p.degree_smoothness, l):
+        return False
 
     if func_type == "method_min":
-        if (type(p.degree_smoothness[0]) == int) or (type(p.degree_smoothness[0]) == float):
-            return False
-        len_p_i = len(p.degree_smoothness[0])
-        for p_i in p.degree_smoothness:
-            if (len_p_i != len(p_i)) or (len_p_i != len_c):
+        # проверка типов
+        for i in range(n):
+            if not type_valid(p.coefficients_abruptness[i], [int, float]):
                 return False
-            for i in range(len(p_i)):
-                if p_i[i] < 0:
-                    return False
+        # проверка длин подмассивов
+        if not are_subarray_len_valid(p.coefficients_abruptness, l):
+            return False
 
     if (func_type == "hyperbolic_potential") or (func_type == "exponential_potential"):
-        for i in range(len(p.function_values)):
-            if p.function_values[i] < 0:
-                return False
-        len_a_i = len(p.coefficients_abruptness[0])
-        for a_i in p.coefficients_abruptness:
-            if len_a_i != len(a_i):
-                return False
-            for i in range(len(a_i)):
-                if a_i[i] < 0:
-                    return False
+        if not are_positive_elem_valid(p.function_values):
+            return False
+        if not type_valid(p.coefficients_abruptness, [int, float]):
+            return False
 
+    return True
+
+
+def are_subarray_len_valid(array: List[List[T]], l: int) -> bool:
+    """
+    Проверка длин подмассивов на соответствие эталонной длине.
+    :param array: двумерный массив, требующий проверки
+    :param l: эталонная длина подмассива
+    :return: возвращает True. если проверка пройдена, иначе False
+    """
+    for subarray in array:
+        if len(subarray) != l:
+            return False
+    return True
+
+
+def type_valid(array: List[T], t: List[type]) -> bool:
+    """
+    Функция проверки типов элементов в массивах.
+    :param array: одномерный массив
+    :param t: одномерных список корректных типов
+    :return: возвращает True. если проверка пройдена, иначе False
+    """
+    for s in array:
+        if type(s) not in t:
+            return False
+    return True
+
+
+def are_positive_elem_valid(array: List[T]) -> bool:
+    """
+    Проверка элементов массива на неотрицательность.
+    :param array: одномерный массива, требующий проверки
+    :return: возвращает True. если проверка пройдена, иначе False
+    """
+    for s in array:
+        if s < 0:
+            return False
     return True
 
 
@@ -51,4 +102,12 @@ def validation_num(number: int):
     """
     return number >= 1
 
-# TODO: написать отдельные проверки для каждого поля формы
+
+# import itertools
+#
+# def rangeED(*argv):
+#     rlist = [range(x) for x in argv]
+#     return itertools.product(*rlist)
+#
+# for x,y,z in rangeED(2,3,4):
+# 	print(x,y,z)

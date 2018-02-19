@@ -45,7 +45,7 @@ class UiMainWindow:
 
     def setup_ui(self, main_window):
         main_window.setObjectName("MainWindow")
-        main_window.resize(900, 548)
+        main_window.resize(900, 600)
         main_window.setWindowTitle("TF_generator v0.1")
 
         central_wdg = QtWidgets.QWidget()
@@ -102,7 +102,6 @@ class UiMainWindow:
 
         self.methods_title = QtWidgets.QLabel()
         self.methods_title.setMaximumHeight(20)
-        self.parameters_title = QtWidgets.QLabel()
 
         # Методы построения функций
         self.method_min = QtWidgets.QRadioButton()
@@ -116,10 +115,12 @@ class UiMainWindow:
         self.layout_methods.addWidget(self.exponential_potential)
         self.layout_methods.addStretch(1)
 
-        self.scroll_methods = QtWidgets.QScrollArea()
-        self.scroll_methods.setLayout(self.layout_methods)
-        self.scroll_methods.setWidgetResizable(True)
-        self.scroll_methods.setMaximumWidth(275)
+        scroll_methods = QtWidgets.QScrollArea()
+        scroll_widget_1 = QtWidgets.QWidget()
+        scroll_widget_1.setLayout(self.layout_methods)
+        scroll_methods.setWidget(scroll_widget_1)
+        scroll_methods.setWidgetResizable(True)
+        scroll_methods.setMaximumWidth(275)
 
         # Параметры функци
         self.idx_func_label = QtWidgets.QLabel()
@@ -142,44 +143,87 @@ class UiMainWindow:
         self.degree_smoothness = QtWidgets.QLineEdit()
         self.coefficients_abruptness_function = QtWidgets.QLineEdit()
 
-        self.form = QtWidgets.QFormLayout()
-        self.form.addRow(self.idx_func_label, self.idx_func)
-        self.form.addRow(self.number_extrema_label, self.number_extrema)
-        self.form.addRow(self.coordinates_label, self.coordinates)
-        self.form.addRow(self.function_values_label, self.function_values)
-        self.form.addRow(self.degree_smoothness_label, self.degree_smoothness)
-        self.form.addRow(
+        self.parameters_title = QtWidgets.QLabel()
+        form_1 = QtWidgets.QFormLayout()
+        form_1.addRow(self.parameters_title)
+        form_1.addRow(self.idx_func_label, self.idx_func)
+        form_1.addRow(self.number_extrema_label, self.number_extrema)
+        form_1.addRow(self.coordinates_label, self.coordinates)
+        form_1.addRow(self.function_values_label, self.function_values)
+        form_1.addRow(self.degree_smoothness_label, self.degree_smoothness)
+        form_1.addRow(
             self.coefficients_abruptness_function_label,
             self.coefficients_abruptness_function
         )
 
-        self.layout_parameters = QtWidgets.QVBoxLayout()
-        self.layout_parameters.addWidget(self.parameters_title)
-        self.layout_parameters.addLayout(self.form)
-        self.layout_parameters.addStretch(1)
+        # self.layout_methods.addLayout(self.form)
+
+        # frame_2 = QtWidgets.QFrame()
+        # frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        # frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
+        # frame_2.setObjectName("frame_2")
 
         self.graph_title = QtWidgets.QLabel()
         self.constraints_x1_label = QtWidgets.QLabel()
         self.constraints_x1 = QtWidgets.QLineEdit()
+        # self.constraints_x1.setMaximumWidth(100)
         self.constraints_x2_label = QtWidgets.QLabel()
         self.constraints_x2 = QtWidgets.QLineEdit()
+        # self.constraints_x2.setMaximumWidth(100)
         self.slice_expr_x1_label = QtWidgets.QLabel()
         self.slice_expr_x1 = QtWidgets.QLineEdit()
         self.slice_expr_x2_label = QtWidgets.QLabel()
         self.slice_expr_x2 = QtWidgets.QLineEdit()
 
-        self.form_graph = QtWidgets.QFormLayout()
-        self.form_graph.addRow(self.constraints_x1_label, self.constraints_x1)
-        self.form_graph.addRow(self.constraints_x2_label, self.constraints_x2)
-        self.form_graph.addRow(self.slice_expr_x1_label, self.slice_expr_x1)
-        self.form_graph.addRow(self.slice_expr_x2_label, self.slice_expr_x2)
+        form_2 = QtWidgets.QFormLayout()
+        form_2.addRow(self.graph_title)
+        form_2.addRow(self.constraints_x1_label, self.constraints_x1)
+        form_2.addRow(self.constraints_x2_label, self.constraints_x2)
+        form_2.addRow(self.slice_expr_x1_label, self.slice_expr_x1)
+        form_2.addRow(self.slice_expr_x2_label, self.slice_expr_x2)
 
-        self.layout_parameters.addWidget(self.graph_title)
-        self.layout_parameters.addLayout(self.form_graph)
+        self.max_label = QtWidgets.QLabel()
+        self.max_func = QtWidgets.QLineEdit()
+        # self.max_func.setMaximumWidth(100)
+        self.min_label = QtWidgets.QLabel()
+        self.min_func = QtWidgets.QLineEdit()
+        # self.min_func.setMaximumWidth(100)
+        self.amp_noise_label = QtWidgets.QLabel()
+        self.amp_noise = QtWidgets.QLineEdit()
+        # self.amp_noise.setMaximumWidth(100)
+        self.add_noise_btn = QtWidgets.QPushButton()
+        # self.add_noise_btn.setMaximumWidth(150)
 
+        self.point_label = QtWidgets.QLabel()
+        self.point = QtWidgets.QLineEdit()
+        self.find_func_btn = QtWidgets.QPushButton()
+
+        # frame_3 = QtWidgets.QFrame()
+        # frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        # frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        # frame_3.setObjectName("frame_3")
+
+        form_3 = QtWidgets.QFormLayout()
+        form_3.addRow(self.min_label, self.min_func)
+        form_3.addRow(self.max_label, self.max_func)
+        form_3.addRow(self.amp_noise_label, self.amp_noise)
+        form_3.addRow("", self.add_noise_btn)
+        form_3.addRow("", QtWidgets.QWidget())
+        form_3.addRow(self.point_label, self.point)
+        form_3.addRow("", self.find_func_btn)
+
+
+
+        layout_parameters = QtWidgets.QVBoxLayout()
+        layout_parameters.addLayout(form_1)
+        layout_parameters.addLayout(form_2)
+        layout_parameters.addLayout(form_3)
+        layout_parameters.addStretch(1)
 
         scroll_parameters = QtWidgets.QScrollArea()
-        scroll_parameters.setLayout(self.layout_parameters)
+        scroll_widget_2 = QtWidgets.QWidget()
+        scroll_widget_2.setLayout(layout_parameters)
+        scroll_parameters.setWidget(scroll_widget_2)
         scroll_parameters.setWidgetResizable(True)
 
         # кнопки
@@ -189,7 +233,7 @@ class UiMainWindow:
 
         # расположение кнопок и всех остальных виджетов (сетка)
         h_box = QtWidgets.QHBoxLayout()
-        h_box.addWidget(self.scroll_methods)
+        h_box.addWidget(scroll_methods)
         h_box.addWidget(scroll_parameters)
 
         h_box_button = QtWidgets.QHBoxLayout()
@@ -287,6 +331,18 @@ class UiMainWindow:
         self.generate_code_python_func.setText("Сгенерировать код функции (Python)")
         self.draw_graph_btn.setText("Построить график")
         self.clear_btn.setText("Очистить поля")
+
+        self.max_label.setText(self.to_utf("Максимум функции"))
+        self.max_func.setText(self.to_utf("0"))
+        self.min_label.setText(self.to_utf("Минимум функции"))
+        self.min_func.setText(self.to_utf("0"))
+        self.amp_noise_label.setText(self.to_utf("Отношение шум/сигнал"))
+        self.amp_noise.setText(self.to_utf("0.0"))
+        self.add_noise_btn.setText(self.to_utf("Применить шум"))
+
+        self.point_label.setText(self.to_utf("Координаты точки"))
+        self.point.setText(self.to_utf("0, 0"))
+        self.find_func_btn.setText(self.to_utf("Получить значение функции"))
 
     def to_utf(self, text):
         return QApplication.translate("MainWindow", text, None)

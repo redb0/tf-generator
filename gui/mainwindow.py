@@ -1,7 +1,9 @@
 import json
 
+from PyQt5.QtCore import Q_FLAGS
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog
 
+from gui.about_dialog import AboutDialog
 from gui.mainwindow_ui import UiMainWindow
 import validation
 from methods.method_min_python import MethodMinPython
@@ -35,6 +37,7 @@ class MainWindow(QMainWindow):
         self.ui.actionOpenJson.triggered.connect(self.import_json)
         self.ui.actionSave.triggered.connect(self.save_parameters_in_json)
         self.ui.actionQuit.triggered.connect(self.close)
+        self.ui.actionAbout.triggered.connect(self.open_about_dialog)
 
     def generate_code(self):
         # TODO: добавить комментарии
@@ -299,5 +302,10 @@ class MainWindow(QMainWindow):
 
     def open_about_dialog(self):
         # TODO: добавить комментарии
-        pass
+        self.about = AboutDialog(flags=Q_FLAGS())
+        self.about.show()
+
+    # def openAbout(self):
+    #     self.about = About(flags=Q_FLAGS())
+    #     self.about.show()
 
