@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore
 
-from PyQt5.QtWidgets import QApplication, QAction
+from PyQt5.QtWidgets import QAction
 
 
 class UiMainWindow:
@@ -217,6 +217,7 @@ class UiMainWindow:
         self.amp_noise.setSingleStep(0.1)
         # self.amp_noise.setMaximumWidth(100)
         self.add_noise_btn = QtWidgets.QPushButton()
+        self.save_min_max = QtWidgets.QPushButton()
         # self.add_noise_btn.setMaximumWidth(150)
 
         self.point_label = QtWidgets.QLabel()
@@ -230,7 +231,7 @@ class UiMainWindow:
         form_3.addRow(self.min_label, self.min_func)
         form_3.addRow(self.max_label, self.max_func)
         form_3.addRow(self.amp_noise_label, self.amp_noise)
-        form_3.addRow(self.add_noise_btn)
+        form_3.addRow(self.save_min_max, self.add_noise_btn)
 
         form_4 = QtWidgets.QFormLayout(frame_4)
         form_4.addRow(self.point_label, self.point)
@@ -371,6 +372,7 @@ class UiMainWindow:
         self.amp_noise_label.setText(self.translate("MainWindow", "Отношение шум/сигнал"))
         self.amp_noise.setValue(0)
         self.add_noise_btn.setText(self.translate("MainWindow", "Применить шум"))
+        self.save_min_max.setText(self.translate("MainWindow", "Сохранить минимум и максимум"))
         self.func_value_label.setText(self.translate("MainWindow", "Значение функции в точке равно"))
         self.func_value.setText(self.translate("MainWindow", "42"))
 

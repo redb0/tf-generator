@@ -14,11 +14,18 @@ def get_file_name(idx: int, pattern: str, expansion: str) -> str:
 
 
 def dict_in_obj(d) -> Parameters:
-    # TODO: добавить комментарии
-    p = Parameters(d["idx"],
-                   d["num_extrema"],
-                   d["coordinates"],
-                   d["function_values"],
-                   d["degree_smoothness"],
-                   d["coefficients_abruptness"])
+    """
+    Функция преобразования списка (dict) в экземпляр класса Parameters.
+    :param d: список с параметрами тестовой функции (dict)
+    :return: возвращает экземпляр класса Parameters
+    """
+    min_f = None
+    max_f = None
+    if d["min_f"] != "":
+        min_f = d["min_f"]
+    if d["max_f"] != "":
+        max_f = d["max_f"]
+    p = Parameters(d["idx"], d["type_f"], d["num_extrema"], d["coordinates"], d["function_values"],
+                   d["degree_smoothness"], d["coefficients_abruptness"], d["constraints_x"],
+                   d["constraints_y"], min_f, max_f)
     return p

@@ -13,6 +13,7 @@ class MlpCanvas(FigureCanvas):
         self.setParent(parent)
 
     def get_toolbar(self):
+        """Метод возвращает панель инструментов для графика"""
         toolbar = NavigationToolbar(self, self)
         return toolbar
 

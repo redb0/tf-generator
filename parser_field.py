@@ -4,7 +4,13 @@ import validation
 
 
 def parse_field(field: str, label: str, print_error):
-    # TODO: добавить комментарии
+    """
+    Функция для разбора строки с одномерным числовым массивом
+    :param field      : текст из поля
+    :param label      : наименование поля, откуда происходило считавание
+    :param print_error: функция для вывода ошибки на экран
+    :return: Если проверка прошла успешно возвращает массив, иначе текст ошибки
+    """
     array = parse_number_list(print_error, field, label)
     return array
 
@@ -33,8 +39,8 @@ def parse_field(field: str, label: str, print_error):
 def parse_coordinates(s: str, print_error, separator=';'):
     """
     Функция разбора строки, содержащей координаты экстремумов
-    :param print_error: 
-    :param s: 
+    :param print_error: функция для вывода ошибки на экран
+    :param s          : строка содержащая списки координат
     :param separator  : 
     :return: список с координатами, если преобразование успешно,
              сообщение об ошибке и пустой список в противном случае
@@ -60,7 +66,14 @@ def parse_coordinates(s: str, print_error, separator=';'):
 
 
 def parse_number(number, field_name: str, print_error) -> int:
-    # TODO: добавить комментарии
+    """
+    Функция проверки числа на >=1.
+    :param number     : число
+    :param field_name : имя поля из которого считывалась строка
+    :param print_error: функция для вывода ошибки на экран
+    :return: если число больше либо равно 1, возвращает это число, 
+             иначе выводит сообщение об ошибки и возвращает 0
+    """
     # number = field.value()
     ok = validation.validation_num(number)
     if ok:
@@ -75,7 +88,7 @@ def parse_number_list(print_error, s: str, field_name: str):
     """
     Метод разбора строки.
     Преобразует строку состоящую из чисел разделенных запятой в одномерный список.
-    :param print_error: 
+    :param print_error: функция для вывода ошибки на экран
     :param s          : строка, содержащая числа
     :param field_name : имя поля из которого считывалась строка
     :return           : возвращает одномерный список, если введена корректная строка, 

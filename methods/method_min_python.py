@@ -7,8 +7,6 @@ from parameters import Parameters
 class MethodMinPython(methods.PythonMethod.Method):
     def __init__(self):
         super().__init__()
-        # self.pattern_name_func = "func"
-        # self.pattern_function = ""
         self.pattern_expression = "A_ij * np.abs(x[idx] - C) ** P_ij"
 
         # self.main_func_str = ""

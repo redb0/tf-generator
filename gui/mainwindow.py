@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog
 
 from gui.about_dialog import AboutDialog
 from gui.mainwindow_ui import UiMainWindow
+
 import validation
 from methods.method_min_python import MethodMinPython
 from parameters import Parameters
@@ -19,15 +20,16 @@ from graph.slice_graph import CanvasSliceGraph
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
+        # TODO: баг, если поля не заполнены и нажать построить графики, появляются сообщения о незаполненных полях поочереди
+        # TODO: добавить кнопку сохранить как
         super().__init__(parent)
         self.ui = UiMainWindow()
         self.ui.setup_ui(self)
 
-        # TODO: сделать на форме поле для ввода индекса функции, сделать автоматическую генерацию имени файла
-        # self.file_name = "testq.py"
         self.idx_func = 1
         self.parameters = None
         self.func = None
+        self.save_file_name = ""
 
         # графики
         self.graph_3d = None
@@ -42,6 +44,7 @@ class MainWindow(QMainWindow):
         self.ui.find_func_btn.clicked.connect(self.get_func_value)
         self.ui.reset_plot.clicked.connect(self.reset_plot)
         self.ui.add_noise_btn.clicked.connect(self.add_noise)
+        self.ui.save_min_max.clicked.connect(self.save_min_max)
 
         # действия
         self.ui.actionOpenJson.triggered.connect(self.import_json)
@@ -89,13 +92,15 @@ class MainWindow(QMainWindow):
             self.ui.coefficients_abruptness_function_label.text(),
             self.display_error_message)
         func_type = self.read_type()
+        constraints_x1 = parser_field.parse_field(self.ui.constraints_x1.text(),
+                                                  self.ui.constraints_x1_label.text(),
+                                                  self.display_error_message)
+        constraints_x2 = parser_field.parse_field(self.ui.constraints_x2.text(),
+                                                  self.ui.constraints_x2_label.text(),
+                                                  self.display_error_message)
         if func_type != "":
-            p = Parameters(self.idx_func,
-                           number_extrema,
-                           coordinates,
-                           function_values,
-                           degree_smoothness,
-                           coefficients)
+            p = Parameters(self.idx_func, func_type, number_extrema, coordinates, function_values,
+                           degree_smoothness, coefficients, constraints_x1, constraints_x2, min_f=None, max_f=None)
             ok = validation.validation_parameters(p, func_type)
             if not ok:
                 error = "Одно или несколько полей заполнены некорректно!"
@@ -138,11 +143,13 @@ class MainWindow(QMainWindow):
     def import_json(self):
         """Метод импорта параметров тестовой функции из json-файла посредством вызова диалогового окна,
         если считывание прошло неудачно, то выводится сообщение об ошибке"""
+        self.clear_edits()
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Открыть json-файл ...", "/home", "Json-Files (*.json);;All Files (*)"
         )
 
         if file_name:
+            self.save_file_name = file_name
             with open(file_name, 'r', encoding="utf-8") as f:
                 data = f.read()
             try:
@@ -155,12 +162,30 @@ class MainWindow(QMainWindow):
             self.ui.statusBar.showMessage("Данные импортированы", 5000)
 
     def print_parameters_in_edit(self):
-        # TODO: добавить комментарии
+        """Вывод параметров тестовой функции на экран"""
+        self.activate_radio_btn()
         self.ui.coefficients_abruptness_function.setText(str(self.parameters.coefficients_abruptness)[1:-1])
         self.ui.number_extrema.setValue(self.parameters.number_extrema)
         self.ui.function_values.setText(str(self.parameters.function_values)[1:-1])
         self.ui.degree_smoothness.setText(str(self.parameters.degree_smoothness)[1:-1])
         self.ui.coordinates.setText(str(self.parameters.coordinates)[1:-1])
+        self.ui.constraints_x1.setText(str(self.parameters.constraints_x)[1:-1])
+        self.ui.constraints_x2.setText(str(self.parameters.constraints_y)[1:-1])
+        if not (self.parameters.min_f is None):
+            self.ui.min_func.setValue(self.parameters.min_f)
+        if not (self.parameters.max_f is None):
+            self.ui.max_func.setValue(self.parameters.max_f)
+
+    def activate_radio_btn(self):
+        """При загрузке тестовой функции из json файла выбирает чекбокс, 
+        который соответствует типу тестовой функции"""
+        t = self.parameters.get_type()
+        if t == "method_min":
+            self.ui.method_min.setChecked(True)
+        elif t == "hyperbolic_potential":
+            self.ui.hyperbolic_potential.setChecked(True)
+        elif t == "exponential_potential":
+            self.ui.exponential_potential.setChecked(True)
 
     def delete_widget(self, layout):
         """
@@ -203,8 +228,8 @@ class MainWindow(QMainWindow):
         self.ui.slice_expr_x1.setText(self.ui.translate("MainWindow", ""))
         self.ui.slice_expr_x2.setText(self.ui.translate("MainWindow", ""))
 
-        self.ui.max_func.setText(self.ui.translate("MainWindow", "0"))
-        self.ui.min_func.setText(self.ui.translate("MainWindow", "0"))
+        self.ui.max_func.setValue(0)
+        self.ui.min_func.setValue(0)
         self.ui.amp_noise.setValue(0)
         self.ui.func_value.setText(self.ui.translate("MainWindow", "42"))
         self.ui.point.setText(self.ui.translate("MainWindow", "0, 0"))
@@ -222,24 +247,44 @@ class MainWindow(QMainWindow):
         self.idx_func = 1
         self.parameters = None
         self.func = None
+        self.save_file_name = None
 
         self.ui.statusBar.showMessage("Зло не дремлет. И мы не должны.", 5000)
 
     def save_parameters_in_json(self):
         """Метод сохранения параметров тестовой функции в json-файл посредством вызова диалогового окна"""
+        # TODO: json поддерживает преобразование None в nill
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Открыть json-файл ...", "/home", "Json-Files (*.json);;All Files (*)"
         )
 
         if file_name:
-            data = json.dumps(self.parameters.__dict__, indent=4)
+            self.save_file_name = file_name
+            d = self.parameters.__dict__
+            if d["min_f"] is None:
+                d["min_f"] = ""
+            if d["max_f"] is None:
+                d["max_f"] = ""
+            data = json.dumps(d, indent=4)
             with open(file_name, 'w') as f:
                 f.write(data)
 
-        self.ui.statusBar.showMessage("Сохранение параметров успешно завершено", 2000)
+        self.ui.statusBar.showMessage("Сохранение параметров успешно завершено", 5000)
+
+    def save_min_max(self):
+        if self.save_file_name and (not (self.parameters is None)):
+            self.parameters.set_min_f(self.ui.min_func.value())
+            self.parameters.set_max_f(self.ui.max_func.value())
+            with open(self.save_file_name, 'r') as f:
+                js_data = json.load(f)
+            with open(self.save_file_name, 'w') as f:
+                js_data["min_f"] = self.parameters.get_min_f()
+                js_data["max_f"] = self.parameters.get_max_f()
+                json.dump(js_data, f, indent=4)
+        self.ui.statusBar.showMessage("Сохранение экстремумов успешно завершено", 5000)
 
     def draw_graph(self):
-        self.read_parameters_function()
+        self.parameters = self.read_parameters_function()
         # TODO: добавить комментарии
         constraints_x = parser_field.parse_number_list(self.display_error_message,
                                                        self.ui.constraints_x1.text(),
@@ -333,6 +378,7 @@ class MainWindow(QMainWindow):
                                                   ylabel="F" + str(self.idx_func),
                                                   title="x2=" + expr_x2,
                                                   legend_title="F" + str(self.idx_func))
+                    self.ui.statusBar.showMessage("Графики успешно построены", 5000)
             else:
                 self.display_error_message("Выберите метод конструирования тестовой функции")
         else:
@@ -375,9 +421,12 @@ class MainWindow(QMainWindow):
                                               ylabel="F" + str(self.idx_func),
                                               title="x2=" + expr_x2,
                                               legend_title="F" + str(self.idx_func))
+                self.ui.statusBar.showMessage("На графики срезов добавлена аддитивная помеха", 5000)
 
     def get_amp_noise(self):
-        # TODO: добавить комментарии
+        """Метод расчета амплитуды шума.
+        Считывает коэффициент шум/сигнал, минимум и максимум
+        Амплитуда = коэффициент шум/сигнал * (максимум - минимум) / 2"""
         k_noise = self.ui.amp_noise.value()
         min_f = self.ui.min_func.value()
         max_f = self.ui.max_func.value()
@@ -395,14 +444,13 @@ class MainWindow(QMainWindow):
         self.about.show()
 
     def get_func_value(self):
-        # TODO: добавить комментарии
+        """расчитывает значение в точке, координаты которой введены пользователем"""
         x = parser_field.parse_number_list(self.display_error_message,
                                            self.ui.point.text(),
                                            self.ui.point_label.text())
         if not (self.func is None):
             if len(x) == self.parameters.get_dimension():
                 y = self.func(x)
-                # self.ui.function_values.setText(self.ui.translate("MainWindow", ""))
                 self.ui.func_value.setText(self.ui.translate("MainWindow", str(y)))
                 return y
             else:
