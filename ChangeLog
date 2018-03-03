@@ -1,0 +1,28 @@
+генератор тестовых функций
+f2202a8 Vladimir <voronov.volodya2013@yandex.ru> on 12.02.2018 at 23:21
+
+Create README.md
+добавлено описание
+284a179 Vladimir <30475117+redb0@users.noreply.github.com> on 12.02.2018 at 23:23
+        committed by GitHub <noreply@github.com>
+
+добавлено построение графиков
+6740408 Vladimir <voronov.volodya2013@yandex.ru> on 16.02.2018 at 23:32
+
+добавлена документация
+8ab9061 Vladimir <voronov.volodya2013@yandex.ru> on 17.02.2018 at 20:40
+
+добавлены типы и документация
+a8b7d87 Vladimir <voronov.volodya2013@yandex.ru> on 18.02.2018 at 20:10
+
+Изменен валидатор, добавлены типы и документация
+ae015ab Vladimir <voronov.volodya2013@yandex.ru> on 19.02.2018 at 18:34
+
+измене интерфейс, добавлена помеха
+1cb39de Vladimir <voronov.volodya2013@yandex.ru> on 19.02.2018 at 23:55
+
+доработан функционал, добавлена документация
+64d6b9c Vladimir <voronov.volodya2013@yandex.ru> on 21.02.2018 at 0:22
+
+validation.py (validation_parameters):Добавлена проверка типа тестовой функции
+Vladimir <voronov.volodya2013@yandex.ru> on 03.03.2018 at 21:31

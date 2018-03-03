@@ -43,6 +43,8 @@ def validation_parameters(p: Parameters, func_type: str) -> bool:
     :return: возвращает True. если проверка пройдена, иначе False
     """
     n = p.number_extrema
+    if func_type not in ["method_min", "hyperbolic_potential", "exponential_potential"]:
+        return False
     if n < 1:
         return False
     ok = (n == len(p.coordinates)) and \

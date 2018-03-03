@@ -312,7 +312,7 @@ class UiMainWindow:
 
     def retranslate_ui(self, main_window):
         # _translate = QtCore.QCoreApplication.translate
-        main_window.setWindowTitle(self.translate("MainWindow", "TFGenerator - О программе"))
+        main_window.setWindowTitle(self.translate("MainWindow", "TFGenerator"))
         self.menuFile.setTitle(self.translate("MainWindow", "Файл"))
 
         self.actionOpenJson.setText(self.translate("MainWindow", "Импорт параметров"))
@@ -323,7 +323,7 @@ class UiMainWindow:
         self.actionQuit.setText(self.translate("MainWindow", "Выход"))
         self.actionQuit.setShortcut(self.translate("MainWindow", "Ctrl+Q"))
 
-        self.actionSettings.setText(self.translate("MainWindow", "Настройки"))
+        # self.actionSettings.setText(self.translate("MainWindow", "Настройки"))
 
         # Справка
         self.menuHelp.setTitle(self.translate("MainWindow", "Справка"))
