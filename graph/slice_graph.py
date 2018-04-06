@@ -18,7 +18,7 @@ class CanvasSliceGraph(MlpCanvas):
                                   expression_y="",
                                   h=h,
                                   amp_noise=amp_noise)
-            self.axes.plot(y, z)
+            self.axes.plot(y, z, lw=0.5)
             self.axes.grid()
         elif expr_y != "":
             x, z = self.make_data(constraints_x,
@@ -28,7 +28,7 @@ class CanvasSliceGraph(MlpCanvas):
                                   expression_y=expr_y,
                                   h=h,
                                   amp_noise=amp_noise)
-            self.axes.plot(x, z)
+            self.axes.plot(x, z, lw=0.5)
             self.axes.grid()
 
     def make_data(self, constraints_x, constraints_y, func, expression_x="", expression_y="", h=0.2, amp_noise=0):

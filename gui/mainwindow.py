@@ -396,6 +396,27 @@ class MainWindow(QMainWindow):
         expr_x1 = self.ui.slice_expr_x1.text()
         expr_x2 = self.ui.slice_expr_x2.text()
         amp_noise = self.get_amp_noise()
+        if (self.parameters is not None) and (self.func is not None) and (amp_noise >= 0):
+            self.contour_graph = None
+            method_type = self.read_type()
+            # TODO: вынести h и delta в окно настроек
+            h = 0.3
+            delta = 1.5
+            if method_type != "":
+                if method_type == "hyperbolic_potential":
+                    h = 0.05
+                    delta = 0.05
+                elif method_type == "exponential_potential":
+                    h = 0.1
+                    delta = 0.1
+            self.delete_widget(self.ui.v_box_contour_graph)
+            self.contour_graph = CanvasContourGraph()
+            contour_graph_toolbar = self.contour_graph.get_toolbar()
+            self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
+            self.ui.v_box_contour_graph.addWidget(self.contour_graph)
+            self.contour_graph.contour_graph(constraints_x, constraints_y, self.func, h=h, delta=delta, amp_noise=amp_noise)
+            self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
+
         if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)) and (not (self.func is None)):
             if (expr_x1 != "") and (expr_x2 != "") and (amp_noise >= 0):
                 self.slice_graph_1 = None

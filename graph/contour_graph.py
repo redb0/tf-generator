@@ -6,13 +6,13 @@ from graph.mpl_canvas import MlpCanvas
 
 
 class CanvasContourGraph(MlpCanvas):
-    def contour_graph(self, constraints_x, constraints_y, func, h=0.1, delta=0.2):
-        x, y, z, levels = self.make_data(constraints_x, constraints_y, func, h=h, delta=delta)
+    def contour_graph(self, constraints_x, constraints_y, func, h=0.1, delta=0.2, amp_noise=0):
+        x, y, z, levels = self.make_data(constraints_x, constraints_y, func, h=h, delta=delta, amp_noise=amp_noise)
         # TODO: добавить подпись для легенды
         plt.contour(x, y, z, levels=levels)
         self.axes.grid()
 
-    def make_data(self, constraints_x, constraints_y, func, h=0.2, delta=0.3):
+    def make_data(self, constraints_x, constraints_y, func, h=0.2, delta=0.3, amp_noise=0):
         x = np.arange(constraints_x[0], constraints_x[1], h)
         y = np.arange(constraints_y[0], constraints_y[1], h)
         xgrid, ygrid = np.meshgrid(x, y)
@@ -22,9 +22,11 @@ class CanvasContourGraph(MlpCanvas):
         for i in range(xgrid.shape[0]):
             for j in range(xgrid.shape[1]):
                 zgrid[i][j] = func([xgrid[i][j], ygrid[i][j]])
+                if amp_noise > 0:
+                    zgrid[i][j] = zgrid[i][j] + np.random.uniform(-amp_noise, amp_noise)
 
         levels = []
-        for i in self.get_delta(np.min(zgrid), np.max(zgrid), delta=delta, l=0.1):
+        for i in self.get_delta(np.min(zgrid), np.max(zgrid), delta=delta, l=0.2):
             levels.append(i)
 
         return xgrid, ygrid, zgrid, levels
