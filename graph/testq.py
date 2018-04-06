@@ -28,25 +28,25 @@ class ApplicationWindow(QMainWindow):
 
         g1 = Canvas3dGraph(self.main_widget)
         h.addWidget(g1)
-        g1.graph_3d([-6, 6], [-6, 6], f)
+        g1.create_graph([-6, 6], [-6, 6], f)
 
         # dc = MyDynamicMplCanvas(self.main_widget, width=5, height=4, dpi=100)
 
         l.addLayout(h)
 
         g2 = CanvasContourGraph(self.main_widget)
-        g2.contour_graph([-6, 6], [-6, 6], f)
+        g2.create_graph([-6, 6], [-6, 6], f)
         h.addWidget(g2)
 
         h1 = QHBoxLayout(self.main_widget)
         l.addLayout(h1)
 
         g3 = CanvasSliceGraph(self.main_widget)
-        g3.graph_slice([-6, 6], [-6, 6], f, expr_x="y")
+        g3.create_graph([-6, 6], [-6, 6], f, expr_x="y")
         h1.addWidget(g3)
 
         g4 = CanvasSliceGraph(self.main_widget)
-        g4.graph_slice([-6, 6], [-6, 6], f, expr_y="2")
+        g4.create_graph([-6, 6], [-6, 6], f, expr_y="2")
         h1.addWidget(g4)
 
         # sc.contour_graph(0)

@@ -311,79 +311,72 @@ class MainWindow(QMainWindow):
             delta = 0.3
             method_type = self.read_type()
             if method_type != "":
-                if method_type == "method_min":
-                    f = test_func.get_test_function_method_min(
-                        self.parameters.get_number_extrema(),
-                        self.parameters.get_coefficients_abruptness(),
-                        self.parameters.get_coordinates(),
-                        self.parameters.get_degree_smoothness(),
-                        self.parameters.get_function_values()
-                    )
-                elif method_type == "hyperbolic_potential":
-                    f = test_func.get_tf_hyperbolic_potential_abs(
-                        self.parameters.get_number_extrema(),
-                        self.parameters.get_coefficients_abruptness(),
-                        self.parameters.get_coordinates(),
-                        self.parameters.get_degree_smoothness(),
-                        self.parameters.get_function_values()
-                    )
-                    h = 0.05
-                    delta = 0.05
-                elif method_type == "exponential_potential":
-                    f = test_func.get_tf_exponential_potential(
-                        self.parameters.get_number_extrema(),
-                        self.parameters.get_coefficients_abruptness(),
-                        self.parameters.get_coordinates(),
-                        self.parameters.get_degree_smoothness(),
-                        self.parameters.get_function_values()
-                    )
-                    h = 0.1
-                    delta = 0.1
-
-                self.func = f
+                self.func = self.get_func(method_type)
 
                 self.graph_3d = Canvas3dGraph()
-                graph_3d_toolbar = self.graph_3d.get_toolbar()
-                self.ui.v_box_3d_graph.addWidget(graph_3d_toolbar)
-                self.ui.v_box_3d_graph.addWidget(self.graph_3d)
-                self.graph_3d.graph_3d(constraints_x, constraints_y, self.func, h=h)
-                self.graph_3d.set_labels(xlabel="x1",
-                                         ylabel="x2",
-                                         title="F" + str(self.idx_func),
-                                         legend_title="F" + str(self.idx_func))
+                self.create_layout_with_graph(self.ui.v_box_3d_graph, self.graph_3d, constraints_x, constraints_y, h,
+                                              title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
+                # graph_3d_toolbar = self.graph_3d.get_toolbar()
+                # self.ui.v_box_3d_graph.addWidget(graph_3d_toolbar)
+                # self.ui.v_box_3d_graph.addWidget(self.graph_3d)
+                # self.graph_3d.create_graph(constraints_x, constraints_y, self.func, h=h)
+                # self.graph_3d.set_labels(xlabel="x1",
+                #                          ylabel="x2",
+                #                          title="F" + str(self.idx_func),
+                #                          legend_title="F" + str(self.idx_func))
 
                 self.contour_graph = CanvasContourGraph()
-                contour_graph_toolbar = self.contour_graph.get_toolbar()
-                self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
-                self.ui.v_box_contour_graph.addWidget(self.contour_graph)
-                self.contour_graph.contour_graph(constraints_x, constraints_y, self.func, h=h, delta=delta)
-                self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
+                self.create_layout_with_graph(self.ui.v_box_contour_graph, self.contour_graph,
+                                              constraints_x, constraints_y, h,
+                                              title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
+                # contour_graph_toolbar = self.contour_graph.get_toolbar()
+                # self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
+                # self.ui.v_box_contour_graph.addWidget(self.contour_graph)
+                # self.contour_graph.create_graph(constraints_x, constraints_y, self.func, h=h, delta=delta)
+                # self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
 
                 if (expr_x1 != "") and (expr_x2 != ""):
                     self.slice_graph_1 = CanvasSliceGraph()  # self.ui.v_box_slice_graph1
-                    slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
-                    self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
-                    self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
-                    self.slice_graph_1.graph_slice(constraints_x, constraints_y, self.func, expr_x=expr_x1, amp_noise=0)
-                    self.slice_graph_1.set_labels(xlabel="x2",
-                                                  ylabel="F" + str(self.idx_func),
-                                                  title="x1=" + expr_x1,
-                                                  legend_title="F" + str(self.idx_func))
+                    self.create_layout_with_graph(self.ui.v_box_slice_graph1, self.slice_graph_1,
+                                                  constraints_x, constraints_y, h, expr_x=expr_x1, amp_noise=0,
+                                                  xlabel="x2", ylabel="F" + str(self.idx_func), title="x1=" + expr_x1,)
+
+                    # slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
+                    # self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
+                    # self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
+                    # self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expr_x=expr_x1, amp_noise=0)
+                    # self.slice_graph_1.set_labels(xlabel="x2",
+                    #                               ylabel="F" + str(self.idx_func),
+                    #                               title="x1=" + expr_x1,
+                    #                               legend_title="F" + str(self.idx_func))
 
                     self.slice_graph_2 = CanvasSliceGraph()  # self.ui.v_box_slice_graph2
-                    slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
-                    self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
-                    self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
-                    self.slice_graph_2.graph_slice(constraints_x, constraints_y, self.func, expr_y=expr_x2, amp_noise=0)
-                    self.slice_graph_2.set_labels(xlabel="x1",
-                                                  ylabel="F" + str(self.idx_func),
-                                                  title="x2=" + expr_x2,
-                                                  legend_title="F" + str(self.idx_func))
-                    self.ui.statusBar.showMessage("Графики успешно построены", 5000)
+                    self.create_layout_with_graph(self.ui.v_box_slice_graph2, self.slice_graph_2,
+                                                  constraints_x, constraints_y, h, expr_y=expr_x2, amp_noise=0,
+                                                  xlabel="x1", ylabel="F" + str(self.idx_func), title="x2=" + expr_x2, )
+                    # slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
+                    # self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
+                    # self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
+                    # self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func, expr_y=expr_x2, amp_noise=0)
+                    # self.slice_graph_2.set_labels(xlabel="x1",
+                    #                               ylabel="F" + str(self.idx_func),
+                    #                               title="x2=" + expr_x2,
+                    #                               legend_title="F" + str(self.idx_func))
+                self.ui.statusBar.showMessage("Графики успешно построены", 5000)
             else:
                 self.display_error_message("Выберите метод конструирования тестовой функции")
         else:
             self.display_error_message("Что-то пошло не так")
+
+    def create_layout_with_graph(self, layout, graph_obj, constraints_x, constraints_y, h,
+                                 xlabel="x1", ylabel="x2", title="F", legend_title="F", **kwargs):  # expr_x="", expr_y="", amp_noise=0, delta=0.3
+        toolbar = graph_obj.get_toolbar()
+        layout.addWidget(toolbar)
+        layout.addWidget(graph_obj)
+        graph_obj.create_graph(constraints_x, constraints_y, self.func, h=h, **kwargs)  # expr_x=expr_x, expr_y=expr_y, amp_noise=amp_noise, delta=delta
+        graph_obj.set_labels(xlabel=xlabel, ylabel=ylabel,
+                             title=title,
+                             legend_title=legend_title + str(self.idx_func))
 
     def add_noise(self):
         # TODO: добавить комментарии
@@ -414,7 +407,7 @@ class MainWindow(QMainWindow):
             contour_graph_toolbar = self.contour_graph.get_toolbar()
             self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
             self.ui.v_box_contour_graph.addWidget(self.contour_graph)
-            self.contour_graph.contour_graph(constraints_x, constraints_y, self.func, h=h, delta=delta, amp_noise=amp_noise)
+            self.contour_graph.create_graph(constraints_x, constraints_y, self.func, h=h, delta=delta, amp_noise=amp_noise)
             self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
 
         if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)) and (not (self.func is None)):
@@ -428,7 +421,7 @@ class MainWindow(QMainWindow):
                 slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
                 self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
                 self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
-                self.slice_graph_1.graph_slice(constraints_x, constraints_y, self.func, expr_x=expr_x1, h=0.01, amp_noise=amp_noise)
+                self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expr_x=expr_x1, h=0.01, amp_noise=amp_noise)
                 self.slice_graph_1.set_labels(xlabel="x2",
                                               ylabel="F" + str(self.idx_func),
                                               title="x1=" + expr_x1,
@@ -438,12 +431,40 @@ class MainWindow(QMainWindow):
                 slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
                 self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
                 self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
-                self.slice_graph_2.graph_slice(constraints_x, constraints_y, self.func, expr_y=expr_x2, h=0.01, amp_noise=amp_noise)
+                self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func, expr_y=expr_x2, h=0.01, amp_noise=amp_noise)
                 self.slice_graph_2.set_labels(xlabel="x1",
                                               ylabel="F" + str(self.idx_func),
                                               title="x2=" + expr_x2,
                                               legend_title="F" + str(self.idx_func))
                 self.ui.statusBar.showMessage("На графики срезов добавлена аддитивная помеха", 5000)
+
+    def get_func(self, method_type):
+        f = None
+        if method_type == "method_min":
+            f = test_func.get_test_function_method_min(
+                self.parameters.get_number_extrema(),
+                self.parameters.get_coefficients_abruptness(),
+                self.parameters.get_coordinates(),
+                self.parameters.get_degree_smoothness(),
+                self.parameters.get_function_values()
+            )
+        elif method_type == "hyperbolic_potential":
+            f = test_func.get_tf_hyperbolic_potential_abs(
+                self.parameters.get_number_extrema(),
+                self.parameters.get_coefficients_abruptness(),
+                self.parameters.get_coordinates(),
+                self.parameters.get_degree_smoothness(),
+                self.parameters.get_function_values()
+            )
+        elif method_type == "exponential_potential":
+            f = test_func.get_tf_exponential_potential(
+                self.parameters.get_number_extrema(),
+                self.parameters.get_coefficients_abruptness(),
+                self.parameters.get_coordinates(),
+                self.parameters.get_degree_smoothness(),
+                self.parameters.get_function_values()
+            )
+        return f
 
     def get_amp_noise(self):
         """Метод расчета амплитуды шума.

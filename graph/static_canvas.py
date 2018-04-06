@@ -6,7 +6,7 @@ from graph.mpl_canvas import MlpCanvas
 
 
 class StaticCanvas(MlpCanvas):
-    def graph_3d(self, data, subplot_n=2, subplot_m=2):
+    def create_graph(self, data, subplot_n=2, subplot_m=2):
         x, y, z = self.make_data_for_3d_graph()
 
         self.axes = Axes3D(self.fig)

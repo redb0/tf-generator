@@ -7,7 +7,7 @@ from graph.mpl_canvas import MlpCanvas
 
 class CanvasSliceGraph(MlpCanvas):
     """Класс для построения графиков срезов функции"""
-    def graph_slice(self, constraints_x, constraints_y, func, expr_x="", expr_y="", h=0.2, amp_noise=0):
+    def create_graph(self, constraints_x, constraints_y, func, expr_x="", expr_y="", h=0.2, amp_noise=0):
         # TODO: добавить подпись для легенды
         np.random.seed()
         if expr_x != "":

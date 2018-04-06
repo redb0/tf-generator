@@ -17,9 +17,9 @@ class MlpCanvas(FigureCanvas):
         toolbar = NavigationToolbar(self, self)
         return toolbar
 
-    def graph_3d(self, constraints_x, constraints_y, func):
+    def create_graph(self, constraints_x, constraints_y, func):
         """
-        Метод построения трехмерного графика тестовой функции
+        Метод построения графика тестовой функции
         :param constraints_x: 
         :param constraints_y: 
         :param func: 
@@ -27,25 +27,25 @@ class MlpCanvas(FigureCanvas):
         """
         pass
 
-    def contour_graph(self, constraints_x, constraints_y, func):
-        """
-        Метод построения графика изолиний тестовой функции
-        :param constraints_x: 
-        :param constraints_y: 
-        :param func: 
-        :return: 
-        """
-        pass
-
-    def graph_slice(self, constraints_x, constraints_y, func):
-        """
-        Метод построения графика срезов тестовой функции
-        :param constraints_x: 
-        :param constraints_y: 
-        :param func: 
-        :return: 
-        """
-        pass
+    # def contour_graph(self, constraints_x, constraints_y, func):
+    #     """
+    #     Метод построения графика изолиний тестовой функции
+    #     :param constraints_x:
+    #     :param constraints_y:
+    #     :param func:
+    #     :return:
+    #     """
+    #     pass
+    #
+    # def graph_slice(self, constraints_x, constraints_y, func):
+    #     """
+    #     Метод построения графика срезов тестовой функции
+    #     :param constraints_x:
+    #     :param constraints_y:
+    #     :param func:
+    #     :return:
+    #     """
+    #     pass
 
     def make_data(self, constraints_x, constraints_y, func, h):
         """
