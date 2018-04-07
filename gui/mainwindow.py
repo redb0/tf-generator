@@ -297,7 +297,8 @@ class MainWindow(QMainWindow):
         expr_x1 = self.ui.slice_expr_x1.text()
         expr_x2 = self.ui.slice_expr_x2.text()
 
-        if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)):
+        # TODO: написать функцию validation для ограничений, != [], x[0]<x[1]
+        if (constraints_x != []) and (constraints_y != []) and (self.parameters is not None):
             self.graph_3d = None
             self.contour_graph = None
             self.slice_graph_1 = None
@@ -338,7 +339,8 @@ class MainWindow(QMainWindow):
                 if (expr_x1 != "") and (expr_x2 != ""):
                     self.slice_graph_1 = CanvasSliceGraph()  # self.ui.v_box_slice_graph1
                     self.create_layout_with_graph(self.ui.v_box_slice_graph1, self.slice_graph_1,
-                                                  constraints_x, constraints_y, h, expr_x=expr_x1, amp_noise=0,
+                                                  constraints_x, constraints_y, h,
+                                                  expression=expr_x1, axes=0, amp_noise=0,
                                                   xlabel="x2", ylabel="F" + str(self.idx_func), title="x1=" + expr_x1,)
 
                     # slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
@@ -352,7 +354,8 @@ class MainWindow(QMainWindow):
 
                     self.slice_graph_2 = CanvasSliceGraph()  # self.ui.v_box_slice_graph2
                     self.create_layout_with_graph(self.ui.v_box_slice_graph2, self.slice_graph_2,
-                                                  constraints_x, constraints_y, h, expr_y=expr_x2, amp_noise=0,
+                                                  constraints_x, constraints_y, h,
+                                                  expression=expr_x2, axes=1, amp_noise=0,
                                                   xlabel="x1", ylabel="F" + str(self.idx_func), title="x2=" + expr_x2, )
                     # slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
                     # self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
@@ -421,7 +424,7 @@ class MainWindow(QMainWindow):
                 slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
                 self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
                 self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
-                self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expr_x=expr_x1, h=0.01, amp_noise=amp_noise)
+                self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expression=expr_x1, h=0.01, amp_noise=amp_noise)
                 self.slice_graph_1.set_labels(xlabel="x2",
                                               ylabel="F" + str(self.idx_func),
                                               title="x1=" + expr_x1,
@@ -431,7 +434,7 @@ class MainWindow(QMainWindow):
                 slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
                 self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
                 self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
-                self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func, expr_y=expr_x2, h=0.01, amp_noise=amp_noise)
+                self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func, expression=expr_x2, h=0.01, amp_noise=amp_noise)
                 self.slice_graph_2.set_labels(xlabel="x1",
                                               ylabel="F" + str(self.idx_func),
                                               title="x2=" + expr_x2,

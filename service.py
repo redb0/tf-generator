@@ -1,3 +1,5 @@
+from typing import List, Tuple
+
 from parameters import Parameters
 
 
@@ -29,3 +31,13 @@ def dict_in_obj(d) -> Parameters:
                    d["degree_smoothness"], d["coefficients_abruptness"], d["constraints_x"],
                    d["constraints_y"], min_f, max_f)
     return p
+
+
+def only_one_true(x: List[bool]) -> Tuple[bool, int]:
+    for i in range(len(x)):
+        if x[i]:
+            if not any(x[i+1:]):
+                return True, i
+            else:
+                return False, -1
+    return False, -1
