@@ -397,7 +397,8 @@ class MainWindow(QMainWindow):
             method_type = self.read_type()
             # TODO: вынести h и delta в окно настроек
             h = 0.3
-            delta = 1.5
+            delta = 3.5
+            l = 6
             if method_type != "":
                 if method_type == "hyperbolic_potential":
                     h = 0.05
@@ -410,7 +411,7 @@ class MainWindow(QMainWindow):
             contour_graph_toolbar = self.contour_graph.get_toolbar()
             self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
             self.ui.v_box_contour_graph.addWidget(self.contour_graph)
-            self.contour_graph.create_graph(constraints_x, constraints_y, self.func, h=h, delta=delta, amp_noise=amp_noise)
+            self.contour_graph.create_graph(constraints_x, constraints_y, self.func, h=h, delta=delta, amp_noise=amp_noise, l=l)
             self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
 
         if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)) and (not (self.func is None)):

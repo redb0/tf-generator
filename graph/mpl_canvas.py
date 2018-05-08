@@ -62,7 +62,7 @@ class MlpCanvas(FigureCanvas):
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.title(title, loc='center')
-        plt.legend(loc='center left', title=legend_title, bbox_to_anchor=(1, 0.5))
+        # plt.legend(loc='center left', title=legend_title, bbox_to_anchor=(1, 0.5))
 
     def set_params(self, fontsize=14):
         params = {'legend.fontsize': fontsize,

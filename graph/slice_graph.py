@@ -1,6 +1,6 @@
 import numpy as np
 import sympy
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from graph.mpl_canvas import MlpCanvas
 from service import only_one_true
@@ -20,7 +20,8 @@ class CanvasSliceGraph(MlpCanvas):
                                   axes=axes,
                                   h=h,
                                   amp_noise=amp_noise)
-            self.axes.plot(x, y, lw=1)
+            self.axes.plot(x, y, lw=1, label='F')
+            # plt.legend(loc='center left', title=legend_title, bbox_to_anchor=(1, 0.5))
             self.axes.grid()
         # if expr_x != "":
         #     y, z = self.make_data(constraints_x,
