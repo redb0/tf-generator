@@ -6,15 +6,15 @@ from graph.mpl_canvas import MlpCanvas
 
 
 class CanvasContourGraph(MlpCanvas):
-    def create_graph(self, constraints_x, constraints_y, func, h=0.1, delta=0.2, amp_noise=0, l=2):
-        x, y, z, levels = self.make_data(constraints_x, constraints_y, func, h=h, delta=delta, amp_noise=amp_noise, l=l)
+    def create_graph(self, constraints_high, constraints_down, func, h=0.1, delta=0.2, amp_noise=0, l=2):
+        x, y, z, levels = self.make_data(constraints_high, constraints_down, func, h=h, delta=delta, amp_noise=amp_noise, l=l)
         # TODO: добавить подпись для легенды
         plt.contour(x, y, z, levels=levels)
         self.axes.grid()
 
-    def make_data(self, constraints_x, constraints_y, func, h=0.2, delta=0.3, amp_noise=0, l=2):
-        x = np.arange(constraints_x[0], constraints_x[1], h)
-        y = np.arange(constraints_y[0], constraints_y[1], h)
+    def make_data(self, constraints_high, constraints_down, func, h=0.2, delta=0.3, amp_noise=0, l=2):
+        x = np.arange(constraints_down[0], constraints_high[0], h)
+        y = np.arange(constraints_down[1], constraints_high[1], h)
         xgrid, ygrid = np.meshgrid(x, y)
 
         zgrid = np.zeros(xgrid.shape)

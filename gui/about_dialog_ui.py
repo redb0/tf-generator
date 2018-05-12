@@ -139,37 +139,37 @@ class UiAboutDialog(object):
         self.label.setText(_translate("AboutDialog", "TFGenerator 2018"))
         self.label_3.setText(_translate("AboutDialog", "Copyright © 2018 Vladimir Voronov"))
         self.version_string.setText(_translate("AboutDialog", "Версия v0.1"))
-        # self.textBrowser.setHtml(_translate("AboutDialog",
-        #                                     "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-        #                                     "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-        #                                     "p, li { white-space: pre-wrap; }\n"
-        #                                     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-        #                                     "<p style=\" margin-top:0px; margin-bottom:25px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#fcfcfc;\"><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Copyright 2017 Ognjen Galić</span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b;\"><br /><br /></span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:<br /><br />1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.<br /><br />2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.<br /><br />THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span></p></body></html>"))
+        self.textBrowser.setHtml(_translate("AboutDialog",
+                                            "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                                            "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                                            "p, li { white-space: pre-wrap; }\n"
+                                            "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+                                            "<p style=\" margin-top:0px; margin-bottom:25px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; background-color:#fcfcfc;\"><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Copyright 2017 Ognjen Galić</span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b;\"><br /><br /></span><span style=\" font-family:\'Open Sans,sans-serif\'; font-size:8pt; color:#2b2b2b; background-color:#fcfcfc;\">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:<br /><br />1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.<br /><br />2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.<br /><br />THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span></p></body></html>"))
 
-        self.textBrowser.setHtml(_translate("AboutDialog", text_license))
+        # self.textBrowser.setHtml(_translate("AboutDialog", text_license))
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("AboutDialog", "License"))
         self.treeWidget.headerItem().setText(0, _translate("AboutDialog", "Name"))
         self.treeWidget.headerItem().setText(1, _translate("AboutDialog", "Author"))
         self.treeWidget.headerItem().setText(2, _translate("AboutDialog", "License"))
-        # __sortingEnabled = self.treeWidget.isSortingEnabled()
-        # self.treeWidget.setSortingEnabled(False)
-        # self.treeWidget.topLevelItem(0).setText(0, _translate("AboutDialog", "Qt 5"))
-        # self.treeWidget.topLevelItem(0).setText(1, _translate("AboutDialog", "The Qt Company"))
-        # self.treeWidget.topLevelItem(0).setText(2, _translate("AboutDialog", "GNU GPL 2.0/3.0/LGPL 3.0"))
-        # self.treeWidget.topLevelItem(1).setText(0, _translate("AboutDialog", "Python 3"))
-        # self.treeWidget.topLevelItem(1).setText(1, _translate("AboutDialog", "Python Software Foundation"))
-        # self.treeWidget.topLevelItem(1).setText(2, _translate("AboutDialog", "Python Software Foundation License"))
+        __sortingEnabled = self.treeWidget.isSortingEnabled()
+        self.treeWidget.setSortingEnabled(False)
+        self.treeWidget.topLevelItem(0).setText(0, _translate("AboutDialog", "Qt 5"))
+        self.treeWidget.topLevelItem(0).setText(1, _translate("AboutDialog", "The Qt Company"))
+        self.treeWidget.topLevelItem(0).setText(2, _translate("AboutDialog", "GNU GPL 2.0/3.0/LGPL 3.0"))
+        self.treeWidget.topLevelItem(1).setText(0, _translate("AboutDialog", "Python 3"))
+        self.treeWidget.topLevelItem(1).setText(1, _translate("AboutDialog", "Python Software Foundation"))
+        self.treeWidget.topLevelItem(1).setText(2, _translate("AboutDialog", "Python Software Foundation License"))
         # self.treeWidget.topLevelItem(2).setText(0, _translate("AboutDialog", "requests"))
         # self.treeWidget.topLevelItem(2).setText(1, _translate("AboutDialog", "Kenneth Reitz"))
         # self.treeWidget.topLevelItem(2).setText(2, _translate("AboutDialog", "Apache 2"))
         # self.treeWidget.topLevelItem(3).setText(0, _translate("AboutDialog", "demjson"))
         # self.treeWidget.topLevelItem(3).setText(1, _translate("AboutDialog", "Deron Meranda"))
         # self.treeWidget.topLevelItem(3).setText(2, _translate("AboutDialog", "GNU LGPL 3.0"))
-        # self.treeWidget.topLevelItem(4).setText(0, _translate("AboutDialog", "pyqt5"))
-        # self.treeWidget.topLevelItem(4).setText(1, _translate("AboutDialog", "Riverbank Computing Limited"))
-        # self.treeWidget.topLevelItem(4).setText(2, _translate("AboutDialog", "GNU GPL v3"))
-        # self.treeWidget.setSortingEnabled(__sortingEnabled)
+        self.treeWidget.topLevelItem(2).setText(0, _translate("AboutDialog", "pyqt5"))
+        self.treeWidget.topLevelItem(2).setText(1, _translate("AboutDialog", "Riverbank Computing Limited"))
+        self.treeWidget.topLevelItem(2).setText(2, _translate("AboutDialog", "GNU GPL v3"))
+        self.treeWidget.setSortingEnabled(__sortingEnabled)
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("AboutDialog", "3rd Party Software"))
 

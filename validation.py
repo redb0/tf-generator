@@ -43,18 +43,18 @@ def validation_parameters(p: Parameters, func_type: str) -> bool:
     :return: возвращает True. если проверка пройдена, иначе False
     """
     n = p.number_extrema
-    if func_type not in ["method_min", "hyperbolic_potential", "exponential_potential"]:
+    if func_type not in ["feldbaum_function", "hyperbolic_potential_abs", "exponential_potential"]:
         return False
     if n < 1:
         return False
     ok = (n == len(p.coordinates)) and \
-         (n == len(p.function_values)) and \
+         (n == len(p.func_values)) and \
          (n == len(p.degree_smoothness)) and \
          (n == len(p.coefficients_abruptness))
     if not ok:
         return False
 
-    if not type_valid(p.function_values, [int, float]):
+    if not type_valid(p.func_values, [int, float]):
         return False
     for i in range(n):
         if not type_valid(p.coordinates[i], [int, float]):
@@ -68,7 +68,7 @@ def validation_parameters(p: Parameters, func_type: str) -> bool:
     if not are_subarray_len_valid(p.degree_smoothness, l):
         return False
 
-    if func_type == "method_min":
+    if func_type == "feldbaum_function":
         # проверка типов
         for i in range(n):
             if not type_valid(p.coefficients_abruptness[i], [int, float]):
@@ -77,8 +77,8 @@ def validation_parameters(p: Parameters, func_type: str) -> bool:
         if not are_subarray_len_valid(p.coefficients_abruptness, l):
             return False
 
-    if (func_type == "hyperbolic_potential") or (func_type == "exponential_potential"):
-        if not are_positive_elem_valid(p.function_values):
+    if (func_type == "hyperbolic_potential_abs") or (func_type == "exponential_potential"):
+        if not are_positive_elem_valid(p.func_values):
             return False
         if not type_valid(p.coefficients_abruptness, [int, float]):
             return False

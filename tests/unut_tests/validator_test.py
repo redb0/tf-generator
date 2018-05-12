@@ -184,7 +184,7 @@ class ValidationTestCase(unittest.TestCase):
     #    b) p =
     def test_validation_parameters_bad_1(self):
         p = None
-        f_type = "method_min"
+        f_type = "feldbaum_function"
         self.assertRaises(AttributeError, vld.validation_parameters, p, f_type)
 
     def test_validation_parameters_false_1(self):
@@ -193,8 +193,8 @@ class ValidationTestCase(unittest.TestCase):
         if n < 1:
             return False
         """
-        p = Parameters(1, "method_min", 0, [], [0, 1], [], [], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 0, [], [0, 1], [], [], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
         # self.assertRaises(AttributeError, vld.validation_parameters, p, f_type)
@@ -208,8 +208,8 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "method_min", 2, [[0, 0], [1, 1]], [1], [[0, 0], [1, 1]], [[0, 0], [1, 1]], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[0, 0], [1, 1]], [1], [[0, 0], [1, 1]], [[0, 0], [1, 1]], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
         # self.assertRaises(AttributeError, vld.validation_parameters, p, f_type)
@@ -223,8 +223,8 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1, 1], [1, 1]], [0, 1], [0], [1, 1], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0], [1, 1], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -237,8 +237,8 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1, 1], [1, 1]], [0, 1], [0, 0], [1, 1, 1], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0, 0], [1, 1, 1], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -247,8 +247,8 @@ class ValidationTestCase(unittest.TestCase):
         if not type_valid(p.function_values, [int, float]):
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1, 1], [1, 1]], ['0', 1], [[1, 1], [1, 1]], [[1, 1], [1, 1]], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], ['0', 1], [[1, 1], [1, 1]], [[1, 1], [1, 1]], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -260,9 +260,9 @@ class ValidationTestCase(unittest.TestCase):
             if not type_valid(p.degree_smoothness[i], [int, float]):
                 return False  # выход
         """
-        p = Parameters(1, "method_min", 2, [[0, 1], [1.5, 1]], [0, 2.3],
+        p = Parameters(1, "feldbaum_function", 2, [[0, 1], [1.5, 1]], [0, 2.3],
                        [[1.2, 'h'], ['2', 1]], [[1, 1], [1, 1]], [], [])
-        f_type = "method_min"
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -274,8 +274,8 @@ class ValidationTestCase(unittest.TestCase):
             if not type_valid(p.degree_smoothness[i], [int, float]):
                 return False 
         """
-        p = Parameters(1, "method_min", 2, [[1.5, 1], ['0', 'h']], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], ['0', 'h']], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -285,8 +285,8 @@ class ValidationTestCase(unittest.TestCase):
         if not are_subarray_len_valid(p.coordinates, l):
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1.5, 1], [0, -1, 0]], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1, 0]], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -295,8 +295,8 @@ class ValidationTestCase(unittest.TestCase):
         if not are_subarray_len_valid(p.degree_smoothness, l):
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1.5, 1], [0, -1]], [0, 1], [[-2, 1], [7.9]], [[1.4, 1], [0.1, 3]], [], [])
-        f_type = "method_min"
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1], [[-2, 1], [7.9]], [[1.4, 1], [0.1, 3]], [], [])
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -307,9 +307,9 @@ class ValidationTestCase(unittest.TestCase):
                 if not type_valid(p.coefficients_abruptness[i], [int, float]):
                     return False
         """
-        p = Parameters(1, "method_min", 2, [[1.5, 1], [0, -1]], [0, 1],
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1],
                        [[-2, 1], [7.9, 0]], [[1.4, '6'], [0.1, 'dfg']], [], [])
-        f_type = "method_min"
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -318,9 +318,9 @@ class ValidationTestCase(unittest.TestCase):
         if not are_subarray_len_valid(p.coefficients_abruptness, l):
             return False
         """
-        p = Parameters(1, "method_min", 2, [[1.5, 1], [0, -1]], [0, 1],
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1],
                        [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1, 0, 6]], [], [])
-        f_type = "method_min"
+        f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 
@@ -330,9 +330,9 @@ class ValidationTestCase(unittest.TestCase):
             if not are_positive_elem_valid(p.function_values):
                 return False
         """
-        p = Parameters(1, "hyperbolic_potential", 2, [[1.5, 1], [0, -1]], [0, -1],
+        p = Parameters(1, "hyperbolic_potential_abs", 2, [[1.5, 1], [0, -1]], [0, -1],
                        [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1]], [], [])
-        f_type = "hyperbolic_potential"
+        f_type = "hyperbolic_potential_abs"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
 

@@ -17,11 +17,11 @@ class MlpCanvas(FigureCanvas):
         toolbar = NavigationToolbar(self, self)
         return toolbar
 
-    def create_graph(self, constraints_x, constraints_y, func):
+    def create_graph(self, constraints_high, constraints_down, func):
         """
         Метод построения графика тестовой функции
-        :param constraints_x: 
-        :param constraints_y: 
+        :param constraints_high: 
+        :param constraints_down: 
         :param func: 
         :return: 
         """
@@ -47,11 +47,11 @@ class MlpCanvas(FigureCanvas):
     #     """
     #     pass
 
-    def make_data(self, constraints_x, constraints_y, func, h):
+    def make_data(self, constraints_high, constraints_down, func, h):
         """
         Метод генерациии данных для построения графиков
-        :param constraints_x: 
-        :param constraints_y: 
+        :param constraints_high: 
+        :param constraints_down: 
         :param func: 
         :param h: 
         :return: 

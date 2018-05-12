@@ -6,8 +6,8 @@ from graph.mpl_canvas import MlpCanvas
 
 
 class Canvas3dGraph(MlpCanvas):
-    def create_graph(self, constraints_x, constraints_y, func, h=0.2, subplot_n=2, subplot_m=2):
-        x, y, z = self.make_data(constraints_x, constraints_y, func, h=0.2)
+    def create_graph(self, constraints_high, constraints_down, func, h=0.2, subplot_n=2, subplot_m=2):
+        x, y, z = self.make_data(constraints_high, constraints_down, func, h=0.2)
         # TODO: добавить подпись для легенды
         self.axes = Axes3D(self.fig)
         # ax = fig.add_subplot(111, projection='3d')
@@ -17,9 +17,9 @@ class Canvas3dGraph(MlpCanvas):
                                cmap=plt.get_cmap('Spectral'))
         self.axes.grid()
 
-    def make_data(self, constraints_x, constraints_y, func, h=0.2):
-        x = np.arange(constraints_x[0], constraints_x[1], h)
-        y = np.arange(constraints_y[0], constraints_y[1], h)
+    def make_data(self, constraints_high, constraints_down, func, h=0.2):
+        x = np.arange(constraints_down[0], constraints_high[0], h)
+        y = np.arange(constraints_down[1], constraints_high[1], h)
         xgrid, ygrid = np.meshgrid(x, y)
 
         zgrid = np.zeros(xgrid.shape)

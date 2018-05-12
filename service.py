@@ -21,15 +21,15 @@ def dict_in_obj(d) -> Parameters:
     :param d: список с параметрами тестовой функции (dict)
     :return: возвращает экземпляр класса Parameters
     """
-    min_f = None
-    max_f = None
-    if d["min_f"] != "":
-        min_f = d["min_f"]
-    if d["max_f"] != "":
-        max_f = d["max_f"]
-    p = Parameters(d["idx"], d["type_f"], d["num_extrema"], d["coordinates"], d["function_values"],
-                   d["degree_smoothness"], d["coefficients_abruptness"], d["constraints_x"],
-                   d["constraints_y"], min_f, max_f)
+    min_f = 0
+    max_f = 0
+    if d["min_value"] != "":
+        min_f = d["min_value"]
+    if d["Max_value"] != "":
+        max_f = d["Max_value"]
+    p = Parameters(d["index"], d["type"], d["number_extrema"], d["coordinates"], d["func_values"],
+                   d["degree_smoothness"], d["coefficients_abruptness"], d["constraints_high"],
+                   d["constraints_down"], d["global_min"], d["global_max"], min_f, max_f)
     return p
 
 

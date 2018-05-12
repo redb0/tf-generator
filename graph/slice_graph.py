@@ -8,13 +8,13 @@ from service import only_one_true
 
 class CanvasSliceGraph(MlpCanvas):
     """Класс для построения графиков срезов функции"""
-    def create_graph(self, constraints_x, constraints_y, func, expression="", axes=0, h=0.2, amp_noise=0):  # self, constraints_x, constraints_y, func, expr_x="", expr_y="", expression="", axes=0, h=0.2, amp_noise=0
+    def create_graph(self, constraints_high, constraints_down, func, expression="", axes=0, h=0.2, amp_noise=0):  # self, constraints_x, constraints_y, func, expr_x="", expr_y="", expression="", axes=0, h=0.2, amp_noise=0
         # TODO: добавить подпись для легенды
         np.random.seed()
 
         if expression:  # expression != ""
-            x, y = self.make_data(constraints_x,
-                                  constraints_y,
+            x, y = self.make_data(constraints_high,
+                                  constraints_down,
                                   func,
                                   expression=expression,
                                   axes=axes,
@@ -23,37 +23,17 @@ class CanvasSliceGraph(MlpCanvas):
             self.axes.plot(x, y, lw=1, label='F')
             # plt.legend(loc='center left', title=legend_title, bbox_to_anchor=(1, 0.5))
             self.axes.grid()
-        # if expr_x != "":
-        #     y, z = self.make_data(constraints_x,
-        #                           constraints_y,
-        #                           func,
-        #                           expression_x=expr_x,
-        #                           expression_y="",
-        #                           h=h,
-        #                           amp_noise=amp_noise)
-        #     self.axes.plot(y, z, lw=0.5)
-        #     self.axes.grid()
-        # elif expr_y != "":
-        #     x, z = self.make_data(constraints_x,
-        #                           constraints_y,
-        #                           func,
-        #                           expression_x="",
-        #                           expression_y=expr_y,
-        #                           h=h,
-        #                           amp_noise=amp_noise)
-        #     self.axes.plot(x, z, lw=0.5)
-        #     self.axes.grid()
 
-    def make_data(self, constraints_x, constraints_y, func, expression="", axes=0, h=0.2, amp_noise=0):  # expression_x="", expression_y="",
+    def make_data(self, constraints_high, constraints_down, func, expression="", axes=0, h=0.2, amp_noise=0):  # expression_x="", expression_y="",
         # TODO: сделать в параметрах одно выражение expression и номер оси для среза
         """
         Метод генерации данных для построения графика
         :param expression: 
         :param axes: 
-        :param constraints_x: одномерный масиив ограничений по оси x(x1)
+        :param constraints_high: одномерный масиив ограничений по оси x(x1)
                               Пример: [ограничение снизу, ограничение сверху]
                                       [-6, 6]
-        :param constraints_y: одномерный масиив ограничений по оси y(x2)
+        :param constraints_down: одномерный масиив ограничений по оси y(x2)
                               Пример: [ограничение снизу, ограничение сверху]
                                       [-6, 6]
         :param func         : тестовая функции, принимающая координаты точки
@@ -105,7 +85,7 @@ class CanvasSliceGraph(MlpCanvas):
 
         symbol = ["x2", "x1"]
         if (expression != "") and (0 <= axes < 2):
-            x = np.arange(constraints_x[0], constraints_x[1], h)
+            x = np.arange(constraints_down[axes], constraints_high[axes], h)
             z = np.zeros(len(x))
 
             t = [expression.find(symbol[i]) != -1 for i in range(len(symbol))]
@@ -116,14 +96,20 @@ class CanvasSliceGraph(MlpCanvas):
                 f = sympy.lambdify(var_x, expr, "numpy")
                 y = f(x)
                 for i in range(len(x)):
-                    z[i] = func([x[i], y[i]])
+                    if axes == 0:
+                        z[i] = func([x[i], y[i]])
+                    elif axes == 1:
+                        z[i] = func([y[i], x[i]])
                     if amp_noise > 0:
                         z[i] = z[i] + np.random.uniform(-amp_noise, amp_noise)
                 return x, z
             elif not all(t):
                 y = float(expression)
                 for i in range(len(x)):
-                    z[i] = func([x[i], y])
+                    if axes == 0:
+                        z[i] = func([x[i], y])
+                    elif axes == 1:
+                        z[i] = func([y, x[i]])
                     if amp_noise > 0:
                         z[i] = z[i] + np.random.uniform(-amp_noise, amp_noise)
                 return x, z
