@@ -1,15 +1,12 @@
 import json
 from typing import Tuple
 
-import validation
-
 
 def parse_field(field: str, label: str):
     """
     Функция для разбора строки с одномерным числовым массивом
     :param field      : текст из поля
     :param label      : наименование поля, откуда происходило считавание
-    :param print_error: функция для вывода ошибки на экран
     :return: Если проверка прошла успешно возвращает массив, иначе текст ошибки
     """
     array = parse_number_list(field, label)
@@ -19,7 +16,6 @@ def parse_field(field: str, label: str):
 def parse_coordinates(s: str, separator=';'):
     """
     Функция разбора строки, содержащей координаты экстремумов
-    :param print_error: функция для вывода ошибки на экран
     :param s          : строка содержащая списки координат
     :param separator  : 
     :return: список с координатами, если преобразование успешно,
@@ -44,7 +40,6 @@ def parse_number(number, field_name: str) -> Tuple[int, str]:
     Функция проверки числа на >=1.
     :param number     : число
     :param field_name : имя поля из которого считывалась строка
-    :param print_error: функция для вывода ошибки на экран
     :return: если число больше либо равно 1, возвращает это число, 
              иначе выводит сообщение об ошибки и возвращает 0
     """
