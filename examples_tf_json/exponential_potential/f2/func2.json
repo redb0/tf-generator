@@ -1,0 +1,21 @@
+{
+    "index": 2,
+    "type": "exponential_potential",
+    "dimension": 2,
+    "number_extrema": 5,
+    "coordinates": [
+        [-4, -4], [-2, -2], [0, 0], [2, 2], [4, 4]
+    ],
+    "func_values": [0.25, 0.2, 0.1, 0.3, 0.35],
+    "degree_smoothness": [
+        [1, 1], [1, 1], [0.6, 0.6], [1, 1], [1, 1]
+    ],
+    "coefficients_abruptness": [1, 2, 0.5, 1.5, 0.8],
+    "constraints_high": [6, 6],
+    "constraints_down": [-6, -6],
+    "global_min": [4, 4],
+    "global_max": [-6, 6],
+    "amp_noise": 0.175,
+    "min_value": -0.36,
+    "Max_value": -0.01
+}

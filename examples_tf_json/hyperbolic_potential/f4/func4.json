@@ -1,0 +1,21 @@
+{
+    "index": 4,
+    "dimension": 2,
+    "type": "hyperbolic_potential_abs",
+    "number_extrema": 5,
+    "coordinates": [
+        [0, 0], [2, 2], [4, 4], [-2, -2], [-4, -4]
+    ],
+    "func_values": [0.1, 0.2, 0.3, 0.4, 0.45],
+    "degree_smoothness": [
+        [0.5, 0.6], [1, 0.8], [0.8, 1], [0.6, 0.9], [0.8, 0.8]
+    ],
+    "coefficients_abruptness": [0.8, 2, 1, 1.5, 0.5],
+    "constraints_high": [6, 6],
+    "constraints_down": [-6, -6],
+    "global_min": [6, -6],
+    "global_max": [0, 0],
+    "amp_noise": 5.03,
+    "min_value": -0.68,
+    "Max_value": -10.74
+}

@@ -1,0 +1,19 @@
+{
+  "idx": 1,
+  "type_f": "hyperbolic_potential",
+  "num_extrema": 5,
+  "coordinates":
+  [
+    [-4, 0], [0, 0], [-3, 3], [2, 2], [-3, -4]
+  ],
+  "function_values": [0.25, 0.2, 0.1, 0.3, 0.35],
+  "degree_smoothness":
+  [
+    [1, 1], [1, 1], [0.6, 0.6], [1, 1], [1, 1]
+  ],
+  "coefficients_abruptness": [1, 2, 0.5, 1.5, 0.8],
+  "constraints_x": [-6, 6],
+  "constraints_y": [-6, 6],
+  "min_f": "",
+  "max_f": ""
+}

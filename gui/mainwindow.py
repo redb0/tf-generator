@@ -1,4 +1,5 @@
 import json
+import os
 
 from PyQt5.QtCore import Q_FLAGS
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QLineEdit, QDoubleSpinBox, QLabel
@@ -22,9 +23,6 @@ from graph.slice_graph import CanvasSliceGraph
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
-        # TODO: баг, если поля не заполнены и нажать построить графики, появляются сообщения о незаполненных полях поочереди
-        # TODO: добавить кнопку сохранить как
-        # TODO: добавить возможность сохранить тестовую функцию в базу (json-файл), при это сохранять инф. с максимумом и минимумом
         super().__init__(parent)
         self.ui = UiMainWindow()
         self.ui.setup_ui(self)
@@ -44,7 +42,7 @@ class MainWindow(QMainWindow):
         self.slice_graph_2 = None
 
         # кнопки
-        self.ui.generate_code_python_func.clicked.connect(self.generate_code)
+        # self.ui.generate_code_python_func.clicked.connect(self.generate_code)
         self.ui.clear_field_btn.clicked.connect(self.clear_edits)
         self.ui.draw_graph_btn.clicked.connect(self.draw_graph)
         self.ui.find_func_btn.clicked.connect(
@@ -59,6 +57,7 @@ class MainWindow(QMainWindow):
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.open_about_dialog)
         self.ui.actionSettings.triggered.connect(self.open_settings_window)
+        # self.ui.actionHelp.triggered.connect(self.open_help)
 
         self.ui.max_func_coord.editingFinished.connect(
             lambda: self.get_func_value(self.ui.max_func_coord, "", self.ui.max_func, show_message=False))
@@ -85,36 +84,53 @@ class MainWindow(QMainWindow):
 
     def read_parameters_function(self):
         # TODO: добавить комментарии
-        self.idx_func = parser_field.parse_number(self.ui.idx_func.value(),
-                                                  self.ui.idx_func_label,
-                                                  self.display_error_message)
-        number_extrema = parser_field.parse_number(self.ui.number_extrema.value(),
-                                                   self.ui.number_extrema_label,
-                                                   self.display_error_message)
-        coordinates = parser_field.parse_coordinates(self.ui.coordinates.text(), self.display_error_message)
-        function_values = parser_field.parse_field(
-            self.ui.function_values.text(),
-            self.ui.function_values_label.text(),
-            self.display_error_message)
-        degree_smoothness = parser_field.parse_field(
-            self.ui.degree_smoothness.text(),
-            self.ui.degree_smoothness_label.text(),
-            self.display_error_message)
-        coefficients = parser_field.parse_field(
-            self.ui.coefficients_abruptness_function.text(),
-            self.ui.coefficients_abruptness_function_label.text(),
-            self.display_error_message)
+        self.idx_func, er = parser_field.parse_number(self.ui.idx_func.value(), self.ui.idx_func_label)
+        if er != "":
+            self.display_error_message(er)
+            return
+        number_extrema, er = parser_field.parse_number(self.ui.number_extrema.value(), self.ui.number_extrema_label)
+        if er != "":
+            self.display_error_message(er)
+            return
+        coordinates, er = parser_field.parse_coordinates(self.ui.coordinates.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        function_values, er = parser_field.parse_field(self.ui.function_values.text(),
+                                                       self.ui.function_values_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        degree_smoothness, er = parser_field.parse_field(self.ui.degree_smoothness.text(),
+                                                         self.ui.degree_smoothness_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        coefficients, er = parser_field.parse_field(self.ui.coefficients_abruptness_function.text(),
+                                                    self.ui.coefficients_abruptness_function_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
         func_type = self.read_type()
-        constraints_high = parser_field.parse_field(self.ui.constraints_high.text(),
-                                                    self.ui.constraints_x1_label.text(),
-                                                    self.display_error_message)
-        constraints_down = parser_field.parse_field(self.ui.constraints_down.text(),
-                                                    self.ui.constraints_x2_label.text(),
-                                                    self.display_error_message)
-        global_min = parser_field.parse_field(self.ui.min_func_coord.text(), self.ui.min_label.text(),
-                                              self.display_error_message)
-        global_max = parser_field.parse_field(self.ui.max_func_coord.text(), self.ui.max_label.text(),
-                                              self.display_error_message)
+        constraints_high, er = parser_field.parse_field(self.ui.constraints_high.text(),
+                                                        self.ui.constraints_x1_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        constraints_down, er = parser_field.parse_field(self.ui.constraints_down.text(),
+                                                        self.ui.constraints_x2_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        global_min, er = parser_field.parse_field(self.ui.min_func_coord.text(), self.ui.min_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        global_max, er = parser_field.parse_field(self.ui.max_func_coord.text(), self.ui.max_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+
         if len(global_min) != len(global_max) or len(global_min) != len(coordinates[0]):
             error = "Поля координат глобального минимума или максимума заполенны некорректно!"
             self.display_error_message(error)
@@ -301,12 +317,14 @@ class MainWindow(QMainWindow):
         if self.save_file_name and (not (self.parameters is None)):
             self.parameters.set_min_f(self.ui.min_func.value())
             self.parameters.set_max_f(self.ui.max_func.value())
-            self.parameters.global_max = parser_field.parse_number_list(lambda t: None,
-                                                                        self.ui.max_func_coord.text(),
-                                                                        "")
-            self.parameters.global_min = parser_field.parse_number_list(lambda t: None,
-                                                                        self.ui.min_func_coord.text(),
-                                                                        "")
+            self.parameters.global_max, er = parser_field.parse_number_list(self.ui.max_func_coord.text(), "")
+            if er != "":
+                self.display_error_message("Координаты глобального максимума введены некорректно")
+                return
+            self.parameters.global_min, er = parser_field.parse_number_list(self.ui.min_func_coord.text(), "")
+            if er != "":
+                self.display_error_message("Координаты глобального минимума введены некорректно")
+                return
             with open(self.save_file_name, 'r') as f:
                 js_data = json.load(f)
             with open(self.save_file_name, 'w') as f:
@@ -314,25 +332,26 @@ class MainWindow(QMainWindow):
                 js_data["Max_value"] = self.parameters.get_max_f()
                 js_data["global_max"] = self.parameters.global_max
                 js_data["global_min"] = self.parameters.global_min
-                js_data["amp_noise"] = (self.parameters.get_max_f() - self.parameters.get_min_f()) / 2
+                js_data["amp_noise"] = abs(self.parameters.get_max_f() - self.parameters.get_min_f()) / 2
                 json.dump(js_data, f, indent=4)
         self.ui.statusBar.showMessage("Сохранение экстремумов успешно завершено", 5000)
 
     def draw_graph(self):
         self.parameters = self.read_parameters_function()
         # TODO: добавить комментарии
-        constraints_high = parser_field.parse_number_list(self.display_error_message,
-                                                          self.ui.constraints_high.text(),
-                                                          self.ui.constraints_x1_label.text())
-        constraints_down = parser_field.parse_number_list(self.display_error_message,
-                                                          self.ui.constraints_down.text(),
-                                                          self.ui.constraints_x2_label.text())
+        # constraints_high, er = parser_field.parse_number_list(self.display_error_message,
+        #                                                   self.ui.constraints_high.text(),
+        #                                                   self.ui.constraints_x1_label.text())
+        # constraints_down, er = parser_field.parse_number_list(self.display_error_message,
+        #                                                   self.ui.constraints_down.text(),
+        #                                                   self.ui.constraints_x2_label.text())
 
         expr_x1 = self.ui.slice_expr_x1.text()
         expr_x2 = self.ui.slice_expr_x2.text()
 
         # TODO: написать функцию validation для ограничений, != [], x[0]<x[1]
-        if (constraints_high != []) and (constraints_down != []) and (self.parameters is not None):
+        if (self.parameters is not None) and (self.parameters.constraints_high != []) and (self.parameters.constraints_down != []):
+        # if (constraints_high != []) and (constraints_down != []) and (self.parameters is not None):
             self.graph_3d = None
             self.contour_graph = None
             self.slice_graph_1 = None
@@ -347,12 +366,12 @@ class MainWindow(QMainWindow):
                 self.func = self.get_func(method_type)
 
                 self.graph_3d = Canvas3dGraph()
-                self.create_layout_with_graph(self.ui.v_box_3d_graph, self.graph_3d, constraints_high, constraints_down,
+                self.create_layout_with_graph(self.ui.v_box_3d_graph, self.graph_3d, self.parameters.constraints_high, self.parameters.constraints_down,
                                               title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
 
                 self.contour_graph = CanvasContourGraph()
                 self.create_layout_with_graph(self.ui.v_box_contour_graph, self.contour_graph,
-                                              constraints_high, constraints_down,
+                                              self.parameters.constraints_high, self.parameters.constraints_down,
                                               xlabel=settings.Settings.settings['xlabel'].value,
                                               ylabel=settings.Settings.settings['ylabel'].value,
                                               title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
@@ -360,7 +379,7 @@ class MainWindow(QMainWindow):
                 if (expr_x1 != "") and (expr_x2 != ""):
                     self.slice_graph_1 = CanvasSliceGraph()  # self.ui.v_box_slice_graph1
                     self.create_layout_with_graph(self.ui.v_box_slice_graph1, self.slice_graph_1,
-                                                  constraints_high, constraints_down,
+                                                  self.parameters.constraints_high, self.parameters.constraints_down,
                                                   expression=expr_x1, axes=0, amp_noise=0,
                                                   xlabel=settings.Settings.settings['ylabel'].value,
                                                   ylabel="F" + str(self.idx_func),
@@ -368,7 +387,7 @@ class MainWindow(QMainWindow):
 
                     self.slice_graph_2 = CanvasSliceGraph()  # self.ui.v_box_slice_graph2
                     self.create_layout_with_graph(self.ui.v_box_slice_graph2, self.slice_graph_2,
-                                                  constraints_high, constraints_down,
+                                                  self.parameters.constraints_high, self.parameters.constraints_down,
                                                   expression=expr_x2, axes=1, amp_noise=0,
                                                   xlabel=settings.Settings.settings['xlabel'].value,
                                                   ylabel="F" + str(self.idx_func),
@@ -393,12 +412,16 @@ class MainWindow(QMainWindow):
 
     def add_noise(self):
         # TODO: добавить комментарии
-        constraints_x = parser_field.parse_number_list(self.display_error_message,
-                                                       self.ui.constraints_high.text(),
-                                                       self.ui.constraints_x1_label.text())
-        constraints_y = parser_field.parse_number_list(self.display_error_message,
-                                                       self.ui.constraints_down.text(),
-                                                       self.ui.constraints_x2_label.text())
+        constraints_x, er = parser_field.parse_number_list(self.ui.constraints_high.text(),
+                                                           self.ui.constraints_x1_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
+        constraints_y, er = parser_field.parse_number_list(self.ui.constraints_down.text(),
+                                                           self.ui.constraints_x2_label.text())
+        if er != "":
+            self.display_error_message(er)
+            return
         expr_x1 = self.ui.slice_expr_x1.text()
         expr_x2 = self.ui.slice_expr_x2.text()
         amp_noise = self.get_amp_noise()
@@ -491,20 +514,28 @@ class MainWindow(QMainWindow):
             return amp
 
     def open_about_dialog(self):
-        # TODO: добавить комментарии
+        """Метод открытия окна "О программе" """
         self.about = AboutDialog(flags=Q_FLAGS())
         self.about.show()
 
     def open_settings_window(self):
+        """Метод открытия окна "Настройки" """
         if self.settings_window is None:
             self.settings_window = SettingsWindow(self)
             self.settings_window.show()
 
+    # def open_help(self):
+    #     script_path = os.path.dirname(os.path.abspath(__file__))
+    #     help_path = os.path.join(script_path, '../resources/help.chm')
+    #     # os.system("hh.exe d:/help.chm::/4_Userguide.htm#_Toc270510")
+    #     os.system("hh.exe " + help_path)
+
     def get_func_value(self, field, name, res, show_message: bool = False):
         """расчитывает значение в точке, координаты которой введены пользователем"""
-        x = parser_field.parse_number_list(self.display_error_message,
-                                           field.text(),
-                                           name)
+        x, er = parser_field.parse_number_list(field.text(), name)
+        if er != "":
+            self.display_error_message(er)
+            return
         if not (self.func is None):
             if len(x) == self.parameters.get_dimension():
                 y = self.func(x)
