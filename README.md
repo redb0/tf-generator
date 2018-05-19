@@ -1,7 +1,7 @@
 # TF-Generator
 Generator of multi-extremal test functions.
 
-##Methods for constructing test functions:
+## Methods for constructing test functions:
 1) The Bocharov and Feldbaum Method (the minimum operator is used) [(paper)](http://www.mathnet.ru/links/971da2f0ea009a71298d2c4fa1ccd381/at11985.pdf).
 2) Hyperbolic potential functions.
 3) Exponential potential functions.
@@ -17,7 +17,7 @@ Software Features:
  - constructing function graphs with noise;
  - saving data in json format.
  
- ##Example
+ ## Example
  
  1) `examples_tf_json/min/f5` - Bocharov-Feldbaum function
  ![alt text](https://github.com/redb0/tf-generator/blob/master/examples_tf_json/min/f5/f5.png)
@@ -52,9 +52,13 @@ Software Features:
 }
  ```
  The function has 10 minima. The global minimum is at the point (-2, 4).
+ 
  2) `examples_tf_json/hyperbolic_potential/f4` - hyperbolic potential function
+
  ![alt text](https://github.com/redb0/tf-generator/blob/master/examples_tf_json/hyperbolic_potential/f4/f4_with_ksn%3D10.png)
+
  3) `examples_tf_json/exponential_potential/f2` - exponential potential function
+
  ![alt text](https://github.com/redb0/tf-generator/blob/master/examples_tf_json/exponential_potential/f2/f2_with_ksn%3D10.png)
  
  
