@@ -325,7 +325,7 @@ class UiMainWindow:
         main_window.setWindowTitle(self.translate("MainWindow", "TFGenerator"))
         self.menuFile.setTitle(self.translate("MainWindow", "Файл"))
 
-        self.actionOpenJson.setText(self.translate("MainWindow", "Импорт параметров"))
+        self.actionOpenJson.setText(self.translate("MainWindow", "Импорт"))
         self.actionOpenJson.setStatusTip(self.translate("MainWindow", "Импорт параметров из Json"))
         self.actionOpenJson.setShortcut(self.translate("MainWindow", "Ctrl+O"))
         self.actionSave.setText(self.translate("MainWindow", "Сохранить как"))

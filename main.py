@@ -15,6 +15,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-# TODO: баг при импорте, неправильно определено поле "num_extrema" (должно быть "num_extrema") а оно - "numиук_extrema"

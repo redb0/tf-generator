@@ -1,3 +1,4 @@
+from typing import List, Union
 
 
 class Parameters:
@@ -32,8 +33,8 @@ class Parameters:
         self.constraints_high = constraints_x
         self.constraints_down = constraints_y
 
-        self.global_min = global_min
-        self.global_max = global_max
+        self._global_min = global_min
+        self._global_max = global_max
 
         self.min_value = min_f
         self.Max_value = max_f
@@ -76,3 +77,19 @@ class Parameters:
 
     def get_max_f(self) -> float:
         return self.Max_value
+
+    @property
+    def global_min(self) -> List[Union[int, float]]:
+        return self._global_min
+
+    @global_min.setter
+    def global_min(self, value: List[Union[int, float]]) -> None:
+        self._global_min = value
+
+    @property
+    def global_max(self) -> List[Union[int, float]]:
+        return self._global_max
+
+    @global_max.setter
+    def global_max(self, value: List[Union[int, float]]) -> None:
+        self._global_max = value

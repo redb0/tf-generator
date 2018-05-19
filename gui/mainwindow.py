@@ -7,11 +7,13 @@ from gui.about_dialog import AboutDialog
 from gui.mainwindow_ui import UiMainWindow
 
 import validation
+from gui.settings_window import SettingsWindow
 from methods.method_min_python import MethodMinPython
 from parameters import Parameters
 import parser_field
 from test_func import test_func
 import service
+import settings
 
 from graph.graph_3d import Canvas3dGraph
 from graph.contour_graph import CanvasContourGraph
@@ -31,6 +33,7 @@ class MainWindow(QMainWindow):
         self.parameters = None
         self.func = None
         self.save_file_name = ""
+        self.settings_window = None
 
         self.function_types = ["feldbaum_function", "hyperbolic_potential_abs", "exponential_potential"]
 
@@ -55,6 +58,7 @@ class MainWindow(QMainWindow):
         self.ui.actionSave.triggered.connect(self.save_parameters_in_json)
         self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout.triggered.connect(self.open_about_dialog)
+        self.ui.actionSettings.triggered.connect(self.open_settings_window)
 
         self.ui.max_func_coord.editingFinished.connect(
             lambda: self.get_func_value(self.ui.max_func_coord, "", self.ui.max_func, show_message=False))
@@ -191,9 +195,7 @@ class MainWindow(QMainWindow):
         self.ui.coordinates.setText(str(self.parameters.coordinates)[del_square_brackets])
         self.ui.constraints_high.setText(str(self.parameters.constraints_high)[del_square_brackets])
         self.ui.constraints_down.setText(str(self.parameters.constraints_down)[del_square_brackets])
-        # if not (self.parameters.min_value is None):
         self.ui.min_func.setValue(self.parameters.min_value)
-        # if not (self.parameters.Max_value is None):
         self.ui.max_func.setValue(self.parameters.Max_value)
 
         self.ui.min_func_coord.setText(str(self.parameters.global_min)[del_square_brackets])
@@ -299,11 +301,20 @@ class MainWindow(QMainWindow):
         if self.save_file_name and (not (self.parameters is None)):
             self.parameters.set_min_f(self.ui.min_func.value())
             self.parameters.set_max_f(self.ui.max_func.value())
+            self.parameters.global_max = parser_field.parse_number_list(lambda t: None,
+                                                                        self.ui.max_func_coord.text(),
+                                                                        "")
+            self.parameters.global_min = parser_field.parse_number_list(lambda t: None,
+                                                                        self.ui.min_func_coord.text(),
+                                                                        "")
             with open(self.save_file_name, 'r') as f:
                 js_data = json.load(f)
             with open(self.save_file_name, 'w') as f:
                 js_data["min_value"] = self.parameters.get_min_f()
                 js_data["Max_value"] = self.parameters.get_max_f()
+                js_data["global_max"] = self.parameters.global_max
+                js_data["global_min"] = self.parameters.global_min
+                js_data["amp_noise"] = (self.parameters.get_max_f() - self.parameters.get_min_f()) / 2
                 json.dump(js_data, f, indent=4)
         self.ui.statusBar.showMessage("Сохранение экстремумов успешно завершено", 5000)
 
@@ -331,80 +342,53 @@ class MainWindow(QMainWindow):
             self.delete_widget(self.ui.v_box_slice_graph1)
             self.delete_widget(self.ui.v_box_slice_graph2)
 
-            h = 0.2
-            delta = 0.3
             method_type = self.read_type()
             if method_type != "":
                 self.func = self.get_func(method_type)
 
                 self.graph_3d = Canvas3dGraph()
                 self.create_layout_with_graph(self.ui.v_box_3d_graph, self.graph_3d, constraints_high, constraints_down,
-                                              h,
                                               title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
-                # graph_3d_toolbar = self.graph_3d.get_toolbar()
-                # self.ui.v_box_3d_graph.addWidget(graph_3d_toolbar)
-                # self.ui.v_box_3d_graph.addWidget(self.graph_3d)
-                # self.graph_3d.create_graph(constraints_high, constraints_down, self.func, h=h)
-                # self.graph_3d.set_labels(xlabel="x1",
-                #                          ylabel="x2",
-                #                          title="F" + str(self.idx_func),
-                #                          legend_title="F" + str(self.idx_func))
 
                 self.contour_graph = CanvasContourGraph()
                 self.create_layout_with_graph(self.ui.v_box_contour_graph, self.contour_graph,
-                                              constraints_high, constraints_down, h,
+                                              constraints_high, constraints_down,
+                                              xlabel=settings.Settings.settings['xlabel'].value,
+                                              ylabel=settings.Settings.settings['ylabel'].value,
                                               title="F" + str(self.idx_func), legend_title="F" + str(self.idx_func))
-                # contour_graph_toolbar = self.contour_graph.get_toolbar()
-                # self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
-                # self.ui.v_box_contour_graph.addWidget(self.contour_graph)
-                # self.contour_graph.create_graph(constraints_high, constraints_down, self.func, h=h, delta=delta)
-                # self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
 
                 if (expr_x1 != "") and (expr_x2 != ""):
                     self.slice_graph_1 = CanvasSliceGraph()  # self.ui.v_box_slice_graph1
                     self.create_layout_with_graph(self.ui.v_box_slice_graph1, self.slice_graph_1,
-                                                  constraints_high, constraints_down, h,
+                                                  constraints_high, constraints_down,
                                                   expression=expr_x1, axes=0, amp_noise=0,
-                                                  xlabel="x2", ylabel="F" + str(self.idx_func), title="x1=" + expr_x1, )
-
-                    # slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
-                    # self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
-                    # self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
-                    # self.slice_graph_1.create_graph(constraints_high, constraints_down, self.func, expr_x=expr_x1, amp_noise=0)
-                    # self.slice_graph_1.set_labels(xlabel="x2",
-                    #                               ylabel="F" + str(self.idx_func),
-                    #                               title="x1=" + expr_x1,
-                    #                               legend_title="F" + str(self.idx_func))
+                                                  xlabel=settings.Settings.settings['ylabel'].value,
+                                                  ylabel="F" + str(self.idx_func),
+                                                  title=settings.Settings.settings['xlabel'].value + '=' + expr_x1, )
 
                     self.slice_graph_2 = CanvasSliceGraph()  # self.ui.v_box_slice_graph2
                     self.create_layout_with_graph(self.ui.v_box_slice_graph2, self.slice_graph_2,
-                                                  constraints_high, constraints_down, h,
+                                                  constraints_high, constraints_down,
                                                   expression=expr_x2, axes=1, amp_noise=0,
-                                                  xlabel="x1", ylabel="F" + str(self.idx_func), title="x2=" + expr_x2, )
-                    # slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
-                    # self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
-                    # self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
-                    # self.slice_graph_2.create_graph(constraints_high, constraints_down, self.func, expr_y=expr_x2, amp_noise=0)
-                    # self.slice_graph_2.set_labels(xlabel="x1",
-                    #                               ylabel="F" + str(self.idx_func),
-                    #                               title="x2=" + expr_x2,
-                    #                               legend_title="F" + str(self.idx_func))
+                                                  xlabel=settings.Settings.settings['xlabel'].value,
+                                                  ylabel="F" + str(self.idx_func),
+                                                  title=settings.Settings.settings['ylabel'].value + '=' + expr_x2, )
                 self.ui.statusBar.showMessage("Графики успешно построены", 5000)
             else:
                 self.display_error_message("Выберите метод конструирования тестовой функции")
         else:
             self.display_error_message("Что-то пошло не так")
 
-    def create_layout_with_graph(self, layout, graph_obj, constraints_high, constraints_down, h,
-                                 xlabel="x1", ylabel="x2", title="F", legend_title="F",
-                                 **kwargs):  # expr_x="", expr_y="", amp_noise=0, delta=0.3
+    def create_layout_with_graph(self, layout, graph_obj, constraints_high, constraints_down,
+                                 xlabel="${x}{_1}$", ylabel="${x}{_2}$", title="F", legend_title="F",
+                                 **kwargs):
         toolbar = graph_obj.get_toolbar()
         layout.addWidget(toolbar)
         layout.addWidget(graph_obj)
-        graph_obj.create_graph(constraints_high, constraints_down, self.func, h=h,
+        graph_obj.create_graph(constraints_high, constraints_down, self.func,
+                               h=settings.Settings.settings['grid_spacing'].value,
                                **kwargs)  # expr_x=expr_x, expr_y=expr_y, amp_noise=amp_noise, delta=delta
-        graph_obj.set_labels(xlabel=xlabel, ylabel=ylabel,
-                             title=title,
+        graph_obj.set_labels(xlabel=xlabel, ylabel=ylabel, title=title,
                              legend_title=legend_title + str(self.idx_func))
 
     def add_noise(self):
@@ -420,29 +404,21 @@ class MainWindow(QMainWindow):
         amp_noise = self.get_amp_noise()
         if (self.parameters is not None) and (self.func is not None) and (amp_noise >= 0):
             self.contour_graph = None
-            method_type = self.read_type()
-            # TODO: вынести h и delta в окно настроек
-            h = 0.3
-            delta = 3.5
-            l = 6
-            if method_type != "":
-                if method_type == self.function_types[1]:
-                    h = 0.05
-                    delta = 0.05
-                elif method_type == self.function_types[2]:
-                    h = 0.1
-                    delta = 0.1
             self.delete_widget(self.ui.v_box_contour_graph)
             self.contour_graph = CanvasContourGraph()
             contour_graph_toolbar = self.contour_graph.get_toolbar()
             self.ui.v_box_contour_graph.addWidget(contour_graph_toolbar)
             self.ui.v_box_contour_graph.addWidget(self.contour_graph)
-            self.contour_graph.create_graph(constraints_x, constraints_y, self.func, h=h, delta=delta,
-                                            amp_noise=amp_noise, l=l)
-            self.contour_graph.set_labels("x1", "x2", "F" + str(self.idx_func), "F" + str(self.idx_func))
+            self.contour_graph.create_graph(constraints_x, constraints_y, self.func,
+                                            h=settings.Settings.settings['grid_spacing'].value, delta=1,
+                                            amp_noise=amp_noise)
+            self.contour_graph.set_labels(settings.Settings.settings['xlabel'].value,
+                                          settings.Settings.settings['ylabel'].value,
+                                          "F" + str(self.idx_func), "F" + str(self.idx_func))
 
         if (constraints_x != []) and (constraints_y != []) and (not (self.parameters is None)) and (not (self.func is None)):
             if (expr_x1 != "") and (expr_x2 != "") and (amp_noise >= 0):
+                h = settings.Settings.settings['chart_step'].value
                 self.slice_graph_1 = None
                 self.slice_graph_2 = None
                 self.delete_widget(self.ui.v_box_slice_graph1)
@@ -452,22 +428,22 @@ class MainWindow(QMainWindow):
                 slice_graph_1_toolbar = self.slice_graph_1.get_toolbar()
                 self.ui.v_box_slice_graph1.addWidget(slice_graph_1_toolbar)
                 self.ui.v_box_slice_graph1.addWidget(self.slice_graph_1)
-                self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expression=expr_x1, h=0.01,
+                self.slice_graph_1.create_graph(constraints_x, constraints_y, self.func, expression=expr_x1, h=h,
                                                 amp_noise=amp_noise)
-                self.slice_graph_1.set_labels(xlabel="x2",
+                self.slice_graph_1.set_labels(xlabel=settings.Settings.settings['ylabel'].value,
                                               ylabel="F" + str(self.idx_func),
-                                              title="x1=" + expr_x1,
+                                              title=settings.Settings.settings['xlabel'].value + "=" + expr_x1,
                                               legend_title="F" + str(self.idx_func))
 
                 self.slice_graph_2 = CanvasSliceGraph()
                 slice_graph_2_toolbar = self.slice_graph_2.get_toolbar()
                 self.ui.v_box_slice_graph2.addWidget(slice_graph_2_toolbar)
                 self.ui.v_box_slice_graph2.addWidget(self.slice_graph_2)
-                self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func, expression=expr_x2, h=0.01,
-                                                amp_noise=amp_noise)
-                self.slice_graph_2.set_labels(xlabel="x1",
+                self.slice_graph_2.create_graph(constraints_x, constraints_y, self.func,
+                                                expression=expr_x2, h=h, amp_noise=amp_noise)
+                self.slice_graph_2.set_labels(xlabel=settings.Settings.settings['xlabel'].value,
                                               ylabel="F" + str(self.idx_func),
-                                              title="x2=" + expr_x2,
+                                              title=settings.Settings.settings['ylabel'].value + "=" + expr_x2,
                                               legend_title="F" + str(self.idx_func))
                 self.ui.statusBar.showMessage("На графики срезов добавлена аддитивная помеха", 5000)
 
@@ -519,6 +495,11 @@ class MainWindow(QMainWindow):
         self.about = AboutDialog(flags=Q_FLAGS())
         self.about.show()
 
+    def open_settings_window(self):
+        if self.settings_window is None:
+            self.settings_window = SettingsWindow(self)
+            self.settings_window.show()
+
     def get_func_value(self, field, name, res, show_message: bool = False):
         """расчитывает значение в точке, координаты которой введены пользователем"""
         x = parser_field.parse_number_list(self.display_error_message,
@@ -540,10 +521,3 @@ class MainWindow(QMainWindow):
             error = "Ученик, магия тебя ждать не будет!"
             if show_message:
                 self.display_error_message(error)
-
-            # def translate(self, text, text_1):
-            #     return QCoreApplication.translate(text, text_1)
-
-            # def openAbout(self):
-            #     self.about = About(flags=Q_FLAGS())
-            #     self.about.show()
