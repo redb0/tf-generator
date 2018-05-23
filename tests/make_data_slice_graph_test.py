@@ -30,7 +30,7 @@ class TestMakeData:
         pass
 
     def test_make_data(self, expression_loop):
-        x, y = self.obj.make_data(self.constraints, self.constraints, mock_func, expression_loop)
+        x, y = self.obj.make_data([6, 6], [-6, -6], mock_func, expression_loop)
         print(x)
         print(y)
         if expression_loop in ["x1", "x2"]:

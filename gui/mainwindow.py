@@ -339,19 +339,12 @@ class MainWindow(QMainWindow):
     def draw_graph(self):
         self.parameters = self.read_parameters_function()
         # TODO: добавить комментарии
-        # constraints_high, er = parser_field.parse_number_list(self.display_error_message,
-        #                                                   self.ui.constraints_high.text(),
-        #                                                   self.ui.constraints_x1_label.text())
-        # constraints_down, er = parser_field.parse_number_list(self.display_error_message,
-        #                                                   self.ui.constraints_down.text(),
-        #                                                   self.ui.constraints_x2_label.text())
 
         expr_x1 = self.ui.slice_expr_x1.text()
         expr_x2 = self.ui.slice_expr_x2.text()
 
         # TODO: написать функцию validation для ограничений, != [], x[0]<x[1]
         if (self.parameters is not None) and (self.parameters.constraints_high != []) and (self.parameters.constraints_down != []):
-        # if (constraints_high != []) and (constraints_down != []) and (self.parameters is not None):
             self.graph_3d = None
             self.contour_graph = None
             self.slice_graph_1 = None

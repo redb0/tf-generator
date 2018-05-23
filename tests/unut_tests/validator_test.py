@@ -187,13 +187,14 @@ class ValidationTestCase(unittest.TestCase):
         f_type = "feldbaum_function"
         self.assertRaises(AttributeError, vld.validation_parameters, p, f_type)
 
+    @unittest.skip("Не доделан")
     def test_validation_parameters_false_1(self):
         """
         n = p.number_extrema
         if n < 1:
             return False
         """
-        p = Parameters(1, "feldbaum_function", 0, [], [0, 1], [], [], [], [])
+        p = Parameters(1, "feldbaum_function", 0, [], [0, 1], [], [], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -208,7 +209,7 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[0, 0], [1, 1]], [1], [[0, 0], [1, 1]], [[0, 0], [1, 1]], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[0, 0], [1, 1]], [1], [[0, 0], [1, 1]], [[0, 0], [1, 1]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -223,7 +224,7 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0], [1, 1], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0], [1, 1], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -237,7 +238,7 @@ class ValidationTestCase(unittest.TestCase):
         if not ok:
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0, 0], [1, 1, 1], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], [0, 1], [0, 0], [1, 1, 1], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -247,7 +248,7 @@ class ValidationTestCase(unittest.TestCase):
         if not type_valid(p.function_values, [int, float]):
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], ['0', 1], [[1, 1], [1, 1]], [[1, 1], [1, 1]], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1, 1], [1, 1]], ['0', 1], [[1, 1], [1, 1]], [[1, 1], [1, 1]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -261,7 +262,7 @@ class ValidationTestCase(unittest.TestCase):
                 return False  # выход
         """
         p = Parameters(1, "feldbaum_function", 2, [[0, 1], [1.5, 1]], [0, 2.3],
-                       [[1.2, 'h'], ['2', 1]], [[1, 1], [1, 1]], [], [])
+                       [[1.2, 'h'], ['2', 1]], [[1, 1], [1, 1]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -274,7 +275,7 @@ class ValidationTestCase(unittest.TestCase):
             if not type_valid(p.degree_smoothness[i], [int, float]):
                 return False 
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], ['0', 'h']], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], ['0', 'h']], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -285,7 +286,7 @@ class ValidationTestCase(unittest.TestCase):
         if not are_subarray_len_valid(p.coordinates, l):
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1, 0]], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1, 0]], [0, 1], [[1, 1], [1, 1]], [[1.4, 1], [0.1, 3]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -295,7 +296,7 @@ class ValidationTestCase(unittest.TestCase):
         if not are_subarray_len_valid(p.degree_smoothness, l):
             return False
         """
-        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1], [[-2, 1], [7.9]], [[1.4, 1], [0.1, 3]], [], [])
+        p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1], [[-2, 1], [7.9]], [[1.4, 1], [0.1, 3]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -308,7 +309,7 @@ class ValidationTestCase(unittest.TestCase):
                     return False
         """
         p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1],
-                       [[-2, 1], [7.9, 0]], [[1.4, '6'], [0.1, 'dfg']], [], [])
+                       [[-2, 1], [7.9, 0]], [[1.4, '6'], [0.1, 'dfg']], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -319,7 +320,7 @@ class ValidationTestCase(unittest.TestCase):
             return False
         """
         p = Parameters(1, "feldbaum_function", 2, [[1.5, 1], [0, -1]], [0, 1],
-                       [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1, 0, 6]], [], [])
+                       [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1, 0, 6]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "feldbaum_function"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -331,7 +332,7 @@ class ValidationTestCase(unittest.TestCase):
                 return False
         """
         p = Parameters(1, "hyperbolic_potential_abs", 2, [[1.5, 1], [0, -1]], [0, -1],
-                       [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1]], [], [])
+                       [[-2, 1], [7.9, 0]], [[1.4, 7], [0.1, 1.1]], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "hyperbolic_potential_abs"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -344,7 +345,7 @@ class ValidationTestCase(unittest.TestCase):
                 return False
         """
         p = Parameters(1, "exponential_potential", 2, [[1.5, 1], [0, -1]], [0, 1],
-                       [[-2, 1], [7.9, 0]], [1.4, '123'], [], [])
+                       [[-2, 1], [7.9, 0]], [1.4, '123'], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "exponential_potential"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -355,7 +356,7 @@ class ValidationTestCase(unittest.TestCase):
             return False
         """
         p = Parameters(1, "exponential_potential", 2, [[1.5, 1], [0, -1]], [0, 1],
-                       [[-2, 1], [7.9, 0]], [1.4, 1], [], [])
+                       [[-2, 1], [7.9, 0]], [1.4, 1], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "qwerty"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, False)
@@ -368,7 +369,7 @@ class ValidationTestCase(unittest.TestCase):
                 return False
         """
         p = Parameters(1, "exponential_potential", 2, [[1.5, 1], [0, -1]], [0, 1],
-                       [[-2, 1], [7.9, 0]], [1.4, 1], [], [])
+                       [[-2, 1], [7.9, 0]], [1.4, 1], [], [], [0,0], [1,1], min_f=0, max_f=1)
         f_type = "exponential_potential"
         res = vld.validation_parameters(p, f_type)
         self.assertEqual(res, True)
